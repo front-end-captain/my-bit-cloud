@@ -1,0 +1,40 @@
+{
+  "name": "@unknown/harmony",
+  "version": "0.0.1",
+  "description": "abstract extension system",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "reflect-metadata": "0.1.13",
+    "cleargraph": "5.6.0",
+    "comment-json": "3.0.3",
+    "fs-extra": "8.1.0",
+    "user-home": "2.0.0"
+  },
+  "devDependencies": {
+    "@types/comment-json": "1.1.1",
+    "@types/fs-extra": "8.1.0",
+    "@babel/runtime": "7.12.18",
+    "@types/node": "*",
+    "@types/jest": "26.0.20",
+    "typescript": "4.7.4"
+  },
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/front-end-captain/my-bit-cloud"
+  },
+  "keywords": [
+    "bit",
+    "bit-aspect",
+    "components",
+    "collaboration",
+    "harmony",
+    "aspects",
+    "extensions"
+  ],
+  "author": "",
+  "license": "ISC"
+}

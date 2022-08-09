@@ -1,0 +1,17 @@
+export declare type ConfigOptions = {
+    cwd?: string;
+    global?: GlobalConfigOpts;
+    shouldThrow?: boolean;
+};
+export declare type GlobalConfigOpts = {
+    dir?: string;
+    name: string;
+};
+export declare class HarmonyConfig {
+    private raw;
+    constructor(raw: Record<string, any>);
+    toObject(): Record<string, any>;
+    toString(): string;
+    static load(fileName: string, opts?: ConfigOptions): HarmonyConfig;
+    static loadGlobal(globalOpts: GlobalConfigOpts, config?: any): HarmonyConfig;
+}

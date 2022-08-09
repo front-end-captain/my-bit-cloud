@@ -7,13 +7,9 @@
   "rushVersion": "5.76.1",
   "pnpmVersion": "7.9.0",
 
-  /**
-   * Options that are only used when the PNPM package manager is selected
-   */
   "pnpmOptions": {
     // "pnpmStore": "local",
-    // "strictPeerDependencies": true,
-
+    "strictPeerDependencies": true,
     "preventManualShrinkwrapChanges": true,
     "useWorkspaces": true
   },
@@ -112,14 +108,14 @@
 
   // "hotfixChangeEnabled": false,
 
-  // "allowedProjectTags": [ "apps", "Web", "tools" ],
+  "allowedProjectTags": ["libs", "aspects"],
 
   "projects": [
-    // {
-    //   "packageName": "my-controls",
-    //   "projectFolder": "libraries/my-controls",
-    //   "reviewCategory": "production",
-    //   "tags": ["libraries", "web"]
-    // },
+    {
+      "packageName": "@unknown/harmony",
+      "projectFolder": "libs/harmony",
+      "tags": ["libs"],
+      "shouldPublish": false
+    }
   ]
 }
