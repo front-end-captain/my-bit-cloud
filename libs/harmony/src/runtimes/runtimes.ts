@@ -1,11 +1,9 @@
-import { RuntimeDefinition } from './runtime-definition';
-import DependencyGraph from '../extension-graph/extension-graph';
-import { RuntimeNotDefined } from './exceptions';
+import { RuntimeDefinition } from "./runtime-definition";
+import { DependencyGraph } from "../extension-graph";
+import { RuntimeNotDefined } from "../exceptions";
 
 export class Runtimes {
-  constructor(
-    readonly runtimeDefinition: {[key: string]: RuntimeDefinition}
-  ) {}  
+  constructor(readonly runtimeDefinition: Record<string, RuntimeDefinition>) {}
 
   add(runtime: RuntimeDefinition) {
     this.runtimeDefinition[runtime.name] = runtime;
@@ -18,14 +16,11 @@ export class Runtimes {
     return this.runtimeDefinition[name];
   }
 
-  dispose() {
-
-  }
-
   static async load(graph: DependencyGraph) {
-    const runtimes: { [key: string]: RuntimeDefinition } = {};
-    graph.extensions.forEach(manifest => {
+    const runtimes: Record<string, RuntimeDefinition> = {};
+    graph.extensions.forEach((manifest) => {
       if (!manifest.declareRuntime) return;
+
       runtimes[manifest.declareRuntime.name] = manifest.declareRuntime;
     });
 

@@ -1,17 +1,10 @@
-import 'reflect-metadata';
-import ExtensionGraph from './extension-graph/extension-graph';
-import { ExtensionLoadError } from './exceptions';
-import { Extension, ExtensionManifest } from './extension';
-import { asyncForEach } from './utils';
-import { Config } from './config';
-import { Aspect } from './aspect';
-import { Runtimes } from './runtimes/runtimes';
-import { RuntimeDefinition } from './runtimes/runtime-definition';
-import { RuntimeNotDefined } from './runtimes/exceptions';
+import "reflect-metadata";
 
-export type GlobalConfig = {
-  [key: string]: object
-};
+import { DependencyGraph as ExtensionGraph } from "./extension-graph";
+import { ExtensionLoadError, RuntimeNotDefined } from "./exceptions";
+import { Extension, ExtensionManifest } from "./extension";
+import { asyncForEach } from "./utils";
+import { Runtimes, RuntimeDefinition } from "./runtimes";
 
 export type RequireFn = (aspect: Extension, runtime: RuntimeDefinition) => Promise<void>;
 
@@ -22,17 +15,12 @@ export class Harmony {
      */
     readonly graph: ExtensionGraph,
 
-    /**
-     * harmony top level config
-     */
-    readonly config: Config,
-
     readonly runtimes: Runtimes,
 
-    readonly activeRuntime: string
+    readonly activeRuntime: string,
   ) {}
 
-  public current: string|null = null;
+  public current: string | null = null;
 
   private runtime: RuntimeDefinition | undefined;
 
@@ -64,14 +52,11 @@ export class Harmony {
   async set(extensions: ExtensionManifest[]) {
     this.graph.load(extensions);
     // Only load new extensions and their dependencies
-    const extensionsToLoad = extensions.map((ext) => { 
-      // @ts-ignore
-      return Reflect.getMetadata('harmony:name', ext) || ext.id || ext.name; 
+    const extensionsToLoad = extensions.map((ext) => {
+      return Reflect.getMetadata("harmony:name", ext) || ext.id || ext.name;
     });
-  
-    // @ts-ignore
-    await this.graph.enrichRuntime(this.runtime, this.runtimes, () => {});
-    // @ts-ignore
+
+    await this.graph.enrichRuntime(this.runtime, this.runtimes, () => Promise.resolve());
     const subgraphs = this.graph.successorsSubgraph(extensionsToLoad);
     if (subgraphs) {
       const executionOrder = subgraphs.toposort(true);
@@ -86,7 +71,7 @@ export class Harmony {
     if (extension.loaded) return;
     // create an index of all vertices in dependency graph
     const deps = this.graph.getRuntimeDependencies(extension, runtime);
-    const instances = deps.map(extension => extension.instance);
+    const instances = deps.map((extension) => extension.instance);
 
     try {
       return extension.__run(instances, this, runtime);
@@ -123,24 +108,29 @@ export class Harmony {
 
   async run(requireFn?: RequireFn) {
     const runtime = this.resolveRuntime(this.activeRuntime);
+
     this.runtime = runtime;
+
     const defaultRequireFn: RequireFn = async (aspect: Extension, runtime: RuntimeDefinition) => {
       const runtimeFile = runtime.getRuntimeFile(aspect.files);
+
       if (!runtimeFile) return;
-      // runtime.require(runtimeFile);
     };
-    // requireFn ? await requireFn(aspect, runtime) : defaultRequireFn(this.graph);
+
     await this.graph.enrichRuntime(runtime, this.runtimes, requireFn || defaultRequireFn);
-    
+
     const executionOrder = this.graph.byExecutionOrder();
     await asyncForEach(executionOrder, async (ext: Extension) => {
       await this.runOne(ext, runtime);
     });
   }
-  
-  static async load(aspects: Aspect[], runtime: string, globalConfig: GlobalConfig) {
-    const aspectGraph = ExtensionGraph.from(aspects as any);
+
+  static async load(extensionManifest: ExtensionManifest[], runtime: string) {
+    console.log('extensionManifest', extensionManifest);
+    
+    const aspectGraph = ExtensionGraph.from(extensionManifest);
     const runtimes = await Runtimes.load(aspectGraph);
-    return new Harmony(aspectGraph, Config.from(globalConfig), runtimes, runtime);
+
+    return new Harmony(aspectGraph, runtimes, runtime);
   }
 }

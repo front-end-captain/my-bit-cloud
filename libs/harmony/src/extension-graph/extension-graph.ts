@@ -5,7 +5,7 @@ import { Extension } from '../extension';
 import { RuntimeDefinition, Runtimes } from '../runtimes';
 import { RequireFn } from '../harmony';
 
-function getName(manifest: any) {
+function getName(manifest: ExtensionManifest) {
   return Reflect.getMetadata('harmony:name', manifest) || manifest.id || manifest.name;
 }
 
@@ -118,7 +118,7 @@ export default class DependencyGraph extends Graph<Extension, Edge> {
     return this.extensions;
   }
 
-  get(id: string): any {
+  get(id: string): Extension | null {
     const cachedVertex = this.cache.get(id);
     if (cachedVertex) return cachedVertex;
 

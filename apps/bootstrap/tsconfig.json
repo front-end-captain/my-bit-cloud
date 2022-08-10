@@ -1,0 +1,21 @@
+{
+  "extends": "@unknown/ts-config/tsconfig.base.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "outDir": "dist",
+    "composite": false,
+    "declaration": false,
+    "declarationMap": false,
+    "target": "ES2015",
+    "module": "CommonJS"
+  },
+  "files": ["bootstrap.ts"],
+  "references": [
+    {
+      "path": "../../libs/harmony"
+    },
+    {
+      "path": "../../aspects/scope"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "es2019",
+      "DOM",
+      "ES6",
+      "DOM.Iterable"
+    ],
+    "types": [
+      "node"
+    ],
+    "target": "ES2015",
+    "module": "CommonJS",
+    "jsx": "react",
+    "allowJs": true,
+    "declaration": true,
+    "sourceMap": false,
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "composite": true,
+    "resolveJsonModule": true,
+    "declarationMap": true
+  },
+  "exclude": [
+    "dist",
+    "lib"
+  ]
+}

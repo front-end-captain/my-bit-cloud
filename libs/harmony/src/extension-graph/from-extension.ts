@@ -4,7 +4,7 @@ import ExtensionPotentialCircular from '../exceptions/extension-potential-circul
 import { Extension } from '../extension';
 import { Edge } from './extension-graph';
 
-function getName(manifest: any) {
+function getName(manifest: ExtensionManifest) {
   return Reflect.getMetadata('harmony:name', manifest) || manifest.id || manifest.name;
 }
 
@@ -37,14 +37,13 @@ export function fromExtension(extension: ExtensionManifest) {
 
     edges = edges.concat(newEdges);
 
-    // @ts-ignore
     instance.dependencies.forEach(dep => iterate(dep));
   }
 
   iterate(extension);
 
-  let vertexArray: { id: string; node: Extension }[] = [];
-  for (let [key, value] of Object.entries(vertices)) {
+  const vertexArray: { id: string; node: Extension }[] = [];
+  for (const [key, value] of Object.entries(vertices)) {
     vertexArray.push({ id: key, node: value });
   }
 

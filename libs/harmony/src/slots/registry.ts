@@ -1,14 +1,10 @@
-
 export class SlotRegistry<T> {
-  constructor(
-    private registerFn: () => string,
-    readonly map = new Map<string, T>()
-  ) {}
+  constructor(private registerFn: () => string, readonly map = new Map<string, T>()) {}
 
   /**
    * get a slot value by extension id.
    */
-  get(id: string): T|undefined {
+  get(id: string): T | undefined {
     return this.map.get(id);
   }
 

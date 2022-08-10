@@ -1,5 +1,13 @@
-import { ProviderFn } from "../types";
-import { Slot, SlotProvider } from "../slots";
+import { SlotProvider } from "../slots";
+import { Harmony } from "../harmony";
+import { RuntimeDefinition } from "../runtimes";
+
+export type ProviderFn = (
+  deps: unknown,
+  config: unknown,
+  slots: unknown,
+  harmony: Harmony,
+) => Promise<unknown>;
 
 export type ExtensionManifest = {
   /**
@@ -43,6 +51,10 @@ export type ExtensionManifest = {
    * array of slots the extension is exposing.
    */
   slots?: SlotProvider<unknown>[];
+
+  declareRuntime?: RuntimeDefinition;
+
+  // getRuntime?: (runtime) => void;
 
   /**
    * any further keys which might be expected by other extensions.

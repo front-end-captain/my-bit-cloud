@@ -1,3 +1,3 @@
 export { RuntimeManifest } from './runtime-manifest';
 export { Runtimes } from './runtimes';
-export { RuntimeDefinition } from './runtime-definition';
+export { RuntimeDefinition, RuntimeDefProps } from './runtime-definition';

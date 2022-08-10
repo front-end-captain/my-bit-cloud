@@ -4,9 +4,10 @@ import { RuntimeDefinition } from './runtimes';
 
 export type AspectManifest = {
   id: string,
+  name?: string;
   dependencies?: Aspect[],
   slots?: SlotProvider<unknown>[],
-  defaultConfig?: {[key: string]: any},
+  defaultConfig?: {[key: string]: unknown},
   declareRuntime?: RuntimeDefinition,
   files?: string[]
 };
@@ -14,6 +15,7 @@ export type AspectManifest = {
 export class Aspect {
   constructor(
     public id: string,
+    public name: string,
     public dependencies: Aspect[],
     readonly slots: SlotProvider<unknown>[],
     readonly defaultConfig = {},
@@ -42,6 +44,7 @@ export class Aspect {
   static create(manifest: AspectManifest) {
     return new Aspect(
       manifest.id,
+      manifest.name,
       manifest.dependencies || [],
       manifest.slots || [],
       manifest.defaultConfig,

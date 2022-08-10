@@ -1,4 +1,4 @@
-import { ProviderFn } from "../types";
+import { ProviderFn } from "./extension-manifest";
 import { Harmony } from "../harmony";
 import { ExtensionManifest } from "./extension-manifest";
 import { ExtensionInstantiationException } from "../exceptions/extension-init-error";
@@ -6,7 +6,6 @@ import { RuntimeDefinition } from "../runtimes";
 
 export type ExtensionProps = {
   name: string;
-  // TODO: changes from any to something meaningful
   dependencies: any[];
   provider: ProviderFn;
 };
@@ -96,10 +95,8 @@ export class Extension {
     return this.manifest.slots || [];
   }
 
-  getConfig(context: Harmony, extensionRuntime: any) {
-    const defaultConfig = extensionRuntime.defaultConfig || this.manifest.defaultConfig || {};
-    const config = context.config.get(this.name) || {};
-    return Object.assign({}, defaultConfig, config);
+  getConfig(extensionRuntime: any) {
+    return extensionRuntime.defaultConfig || this.manifest.defaultConfig || {};
   }
 
   /**
@@ -114,25 +111,20 @@ export class Extension {
       return undefined;
     }
 
-    // @ts-ignore
     const registries = this.buildSlotRegistries(this.getSlots(extensionRuntime), context);
-    const config = this.getConfig(context, extensionRuntime);
+    const config = this.getConfig(extensionRuntime);
 
     if (!this.loaded) {
       if (extensionRuntime.provider)
         this._instance = await extensionRuntime.provider(dependencies, config, registries, context);
       else {
         try {
-          // @ts-ignore
           this._instance = new extensionRuntime.manifest(...dependencies);
         } catch (err) {
           throw new ExtensionInstantiationException(err.toString());
         }
       }
-      // @ts-ignore adding the extension ID to the instance.
-      // this._instance.id = this.manifest.name;
-      // @ts-ignore adding the extension ID to the instance.
-      // this._instance.config = config;
+
       this._loaded = true;
       return this._instance;
     }

@@ -1,5 +1,3 @@
-import { RuntimeModuleError } from './exceptions';
-
 export type RuntimeDefProps = {
   name: string
 };
@@ -16,14 +14,6 @@ export class RuntimeDefinition {
 
   getRuntimeFile(paths: string[]): string|undefined {
     return paths.find(path => this.filePredicate(path, this.name));
-  }
-
-  require(file: string) {
-    // try {
-    //   require(file);
-    // } catch(err) {
-    //   throw new RuntimeModuleError(err);
-    // }
   }
 
   static create(def: RuntimeDefProps) {

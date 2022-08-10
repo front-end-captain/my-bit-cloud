@@ -3,22 +3,28 @@
   "version": "0.0.1",
   "description": "abstract extension system",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
   "scripts": {
+    "lint": "eslint -c .eslintrc.js src/",
     "build": "tsc"
   },
   "dependencies": {
     "reflect-metadata": "0.1.13",
     "cleargraph": "5.6.0",
     "comment-json": "3.0.3",
-    "fs-extra": "8.1.0",
+    "fs-extra": "10.1.0",
     "user-home": "2.0.0"
   },
   "devDependencies": {
+    "@rushstack/eslint-patch": "~1.1.4",
+    "@unknown/ts-config": "workspace:*",
+    "@unknown/eslint-config": "workspace:*",
     "@types/comment-json": "1.1.1",
-    "@types/fs-extra": "8.1.0",
     "@babel/runtime": "7.12.18",
     "@types/node": "*",
     "@types/jest": "26.0.20",
+    "eslint": "~8.18.0",
     "typescript": "4.7.4"
   },
   "private": true,

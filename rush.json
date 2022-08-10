@@ -55,23 +55,11 @@
   //    */
   //   // "ignoredNpmScopes": ["@types"]
   // },
-  "gitPolicy": {
-    /**
-     * The commit message to use when committing changes during 'rush publish'.
-     *
-     * For example, if you want to prevent these commits from triggering a CI build,
-     * you might configure your system's trigger to look for a special string such as "[skip-ci]"
-     * in the commit message, and then customize Rush's message to contain that string.
-     */
-    "versionBumpCommitMessage": "Bump versions [skip ci]",
 
-    /**
-     * The commit message to use when committing changes during 'rush version'.
-     *
-     * For example, if you want to prevent these commits from triggering a CI build,
-     * you might configure your system's trigger to look for a special string such as "[skip-ci]"
-     * in the commit message, and then customize Rush's message to contain that string.
-     */
+  "gitPolicy": {
+    // "allowedEmailRegExps": [],
+    // "sampleEmail": "",
+    "versionBumpCommitMessage": "Bump versions [skip ci]",
     "changeLogUpdateCommitMessage": "Update changelogs [skip ci]"
   },
 
@@ -81,9 +69,6 @@
     "defaultRemote": "origin"
   },
 
-  /**
-   * Event hooks are customized script actions that Rush executes when specific events occur
-   */
   "eventHooks": {
     "preRushInstall": [],
     "postRushInstall": [],
@@ -108,13 +93,43 @@
 
   // "hotfixChangeEnabled": false,
 
-  "allowedProjectTags": ["libs", "aspects"],
+  "allowedProjectTags": ["libs", "aspects", "apps", "shared"],
 
   "projects": [
     {
       "packageName": "@unknown/harmony",
       "projectFolder": "libs/harmony",
       "tags": ["libs"],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/bootstrap",
+      "projectFolder": "apps/bootstrap",
+      "tags": ["apps"],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/eslint-config",
+      "projectFolder": "shared/eslint-config",
+      "tags": ["shared"],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/ts-config",
+      "projectFolder": "shared/ts-config",
+      "tags": ["shared"],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/scope",
+      "projectFolder": "aspects/scope",
+      "tags": ["aspects"],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/viking",
+      "projectFolder": "aspects/viking",
+      "tags": ["aspects"],
       "shouldPublish": false
     }
   ]
