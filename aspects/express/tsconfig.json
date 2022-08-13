@@ -1,0 +1,16 @@
+{
+  "extends": "@unknown/ts-config/tsconfig.base.json",
+  "include": ["src"],
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "references": [
+    {
+      "path": "../../libs/harmony"
+    },
+    {
+      "path": "../../aspects/viking"
+    }
+  ]
+}

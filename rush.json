@@ -131,6 +131,12 @@
       "projectFolder": "aspects/viking",
       "tags": ["aspects"],
       "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/express",
+      "projectFolder": "aspects/express",
+      "tags": ["aspects"],
+      "shouldPublish": false
     }
   ]
 }
