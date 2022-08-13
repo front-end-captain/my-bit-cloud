@@ -15,6 +15,7 @@ export interface ComposerProps<T = any> {
 export function Composer(props: ComposerProps) {
   const { components = [], children } = props;
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const arrayified: ComponentTuple[] = components.map((tuple) =>
     Array.isArray(tuple) ? tuple : [tuple, undefined],

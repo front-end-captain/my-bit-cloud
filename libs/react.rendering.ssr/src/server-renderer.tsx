@@ -14,7 +14,7 @@ interface HtmlTemplate extends React.FC<HtmlProps> {
 
 export type ServerRendererOptions = {
   htmlTemplate: HtmlTemplate;
-  mountPoint: ComponentType<PropsWithChildren<{}>>;
+  mountPoint: ComponentType<PropsWithChildren<Record<string, any>>>;
 };
 
 const defaultOptions: ServerRendererOptions = {
@@ -53,7 +53,6 @@ export class ServerRenderer {
 
     // (*) serialize state
     const realtimeAssets = await this.serialize(renderContexts, app);
-    // @ts-ignore // TODO upgrade 'webpack-merge'
     const totalAssets = merge(session.assets, realtimeAssets) as Assets;
 
     // (4) render html-template (to string)

@@ -8,7 +8,7 @@ var baseExtends = [
 var reactExtends = [
   'plugin:react/recommended',
   // https://github.com/jsx-eslint/eslint-plugin-react/blob/HEAD/docs/rules/react-in-jsx-scope.md
-  'plugin:react/jsx-runtime',
+  // 'plugin:react/jsx-runtime',
   'plugin:react-hooks/recommended',
 ];
 
