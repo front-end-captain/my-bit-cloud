@@ -137,6 +137,36 @@
       "projectFolder": "aspects/express",
       "tags": ["aspects"],
       "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/graphql",
+      "projectFolder": "aspects/graphql",
+      "tags": ["aspects"],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/network",
+      "projectFolder": "libs/network",
+      "tags": ["libs"],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/react.rendering.ssr",
+      "projectFolder": "libs/react.rendering.ssr",
+      "tags": ["libs"],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/ui-foundation.ui.rendering.html",
+      "projectFolder": "libs/ui-foundation.ui.rendering.html",
+      "tags": ["libs"],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/base-ui.utils.composer",
+      "projectFolder": "libs/base-ui.utils.composer",
+      "tags": ["libs"],
+      "shouldPublish": false
     }
   ]
 }

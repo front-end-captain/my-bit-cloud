@@ -21,7 +21,8 @@
     "baseUrl": ".",
     "composite": true,
     "resolveJsonModule": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "removeComments": true
   },
   "exclude": [
     "dist",

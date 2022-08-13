@@ -1,27 +1,24 @@
 {
-  "name": "@unknown/viking",
-  "version": "1.0.0",
-  "private": true,
-  "description": "",
+  "name": "@unknown/ui-foundation.ui.rendering.html",
+  "version": "0.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "lint": "eslint -c .eslintrc.js src/",
     "build": "tsc"
   },
-  "dependencies": {
-    "@unknown/harmony": "workspace:*"
-  },
   "devDependencies": {
+    "@types/react": "17.0.2",
+    "@types/node": "*",
+    "react": "17.0.2",
     "@rushstack/eslint-patch": "~1.1.4",
     "@unknown/ts-config": "workspace:*",
     "@unknown/eslint-config": "workspace:*",
-    "@types/node": "*",
     "eslint": "~8.18.0",
-    "tslib": "2.4.0",
     "typescript": "4.7.4"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17.0.0"
+  },
+  "private": true
 }
