@@ -24,7 +24,32 @@
       "commandKind": "bulk",
       "ignoreMissingScript": true,
       "allowWarningsInSuccessfulBuild": true
+    },
+    {
+      "name": "run",
+      "summary": "",
+      "commandKind": "global",
+      "shellCommand": "ts-node common/autoinstallers/run-script/start.ts"
     }
   ],
-  "parameters": []
+  "parameters": [
+    {
+      "parameterKind": "string",
+      "longName": "--project",
+      "shortName": "-p",
+      "description": "Specifies the name of the main Rush project to be run",
+      "associatedCommands": ["run"],
+      "argumentName": "PROJECT_NAME",
+      "required": true
+    },
+    {
+      "parameterKind": "string",
+      "longName": "--script",
+      "shortName": "-s",
+      "description": "Specifies script name in project",
+      "associatedCommands": ["run"],
+      "argumentName": "SCRIPT_NAME",
+      "required": true
+    }
+  ]
 }
