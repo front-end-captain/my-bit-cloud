@@ -10,8 +10,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@unknown/harmony": "workspace:*",
-    "@unknown/viking": "workspace:*"
+    "@unknown/harmony": "workspace:*"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "~1.1.4",

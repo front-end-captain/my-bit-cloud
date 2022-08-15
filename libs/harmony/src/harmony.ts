@@ -126,8 +126,6 @@ export class Harmony {
   }
 
   static async load(extensionManifest: ExtensionManifest[], runtime: string) {
-    console.log('extensionManifest', extensionManifest);
-    
     const aspectGraph = ExtensionGraph.from(extensionManifest);
     const runtimes = await Runtimes.load(aspectGraph);
 

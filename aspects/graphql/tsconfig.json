@@ -8,9 +8,6 @@
   "references": [
     {
       "path": "../../libs/harmony"
-    },
-    {
-      "path": "../../aspects/viking"
     }
   ]
 }
