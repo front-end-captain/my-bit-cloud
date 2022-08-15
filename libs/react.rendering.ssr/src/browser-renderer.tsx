@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { compact } from "lodash";
 import ReactDOM from "react-dom";
-import { Html, mountPointId, ssrCleanup } from "@unknown/ui-foundation.ui.rendering.html";
+import { Html, mountPointId, ssrCleanup } from "@unknown/ui-foundation.uis";
 import { Composer, Wrapper } from "@unknown/base-ui.utils.composer";
 import { ClientRenderPlugin } from "./render-plugins";
 

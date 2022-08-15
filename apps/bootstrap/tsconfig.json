@@ -1,6 +1,7 @@
 {
   "extends": "@unknown/ts-config/tsconfig.base.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "allowJs": true,
     "outDir": "dist",
     "composite": false,

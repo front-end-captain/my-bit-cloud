@@ -1,0 +1,40 @@
+{
+  "name": "@unknown/ui-foundation.uis",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "lint": "eslint -c .eslintrc.js src/",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@unknown/harmony": "workspace:*",
+    "@teambit/design.ui.avatar": "1.0.6",
+    "@teambit/base-ui.layout.breakpoints": "1.0.0",
+    "lodash": "4.17.21",
+    "classnames": "2.2.6",
+    "react-router-dom": "6.3.0",
+    "uuid": "8.3.2",
+    "mousetrap": "1.6.5",
+    "@apollo/client": "3.3.7",
+    "json-formatter-js": "2.3.4"
+  },
+  "devDependencies": {
+    "@types/lodash": "4.14.182",
+    "@types/react": "17.0.2",
+    "@types/react-dom": "17.0.2",
+    "@types/node": "*",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "graphql": "14.7.0",
+    "@rushstack/eslint-patch": "~1.1.4",
+    "@unknown/ts-config": "workspace:*",
+    "@unknown/eslint-config": "workspace:*",
+    "eslint": "~8.18.0",
+    "typescript": "4.7.4"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17.0.0"
+  },
+  "private": true
+}

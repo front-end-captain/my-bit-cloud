@@ -4,7 +4,7 @@
   "pnpmVersion": "7.9.0",
   "pnpmOptions": {
     // "pnpmStore": "local",
-    "strictPeerDependencies": true,
+    "strictPeerDependencies": false,
     "preventManualShrinkwrapChanges": true,
     "useWorkspaces": true
   },
@@ -82,6 +82,12 @@
       "shouldPublish": false
     },
     {
+      "packageName": "@unknown/component",
+      "projectFolder": "aspects/component",
+      "tags": ["aspects"],
+      "shouldPublish": false
+    },
+    {
       "packageName": "@unknown/network",
       "projectFolder": "libs/network",
       "tags": ["libs"],
@@ -94,14 +100,56 @@
       "shouldPublish": false
     },
     {
-      "packageName": "@unknown/ui-foundation.ui.rendering.html",
-      "projectFolder": "libs/ui-foundation.ui.rendering.html",
+      "packageName": "@unknown/ui-foundation.uis",
+      "projectFolder": "libs/ui-foundation.uis",
       "tags": ["libs"],
       "shouldPublish": false
     },
     {
       "packageName": "@unknown/base-ui.utils.composer",
       "projectFolder": "libs/base-ui.utils.composer",
+      "tags": ["libs"],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/component-id",
+      "projectFolder": "libs/component-id",
+      "tags": ["libs"],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/legacy-bit-id",
+      "projectFolder": "libs/legacy-bit-id",
+      "tags": ["libs"],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/component-version",
+      "projectFolder": "libs/component-version",
+      "tags": ["libs"],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/component-issue",
+      "projectFolder": "libs/component-issue",
+      "tags": ["libs"],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/source",
+      "projectFolder": "libs/source",
+      "tags": ["libs"],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/bit-error",
+      "projectFolder": "libs/bit-error",
+      "tags": ["libs"],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/lane-id",
+      "projectFolder": "libs/lane-id",
       "tags": ["libs"],
       "shouldPublish": false
     }

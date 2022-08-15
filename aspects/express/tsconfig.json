@@ -2,6 +2,7 @@
   "extends": "@unknown/ts-config/tsconfig.base.json",
   "include": ["src"],
   "compilerOptions": {
+    "baseUrl": ".",
     "rootDir": "src",
     "outDir": "dist"
   },

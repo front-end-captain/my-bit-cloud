@@ -1,4 +1,4 @@
-export type { Assets as HtmlAssets } from "@unknown/ui-foundation.ui.rendering.html";
+export { Assets as HtmlAssets } from "@unknown/ui-foundation.uis";
 export { browserFromExpress } from "./browser-from-express";
 export { BrowserRenderer } from "./browser-renderer";
 export { Ssr } from "./react-ssr";

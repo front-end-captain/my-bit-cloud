@@ -1,0 +1,15 @@
+{
+  "extends": "@unknown/ts-config/tsconfig.base.json",
+  "include": ["src"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "jsx": "react",
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "references": [
+    {
+      "path": "../../libs/harmony"
+    }
+  ]
+}

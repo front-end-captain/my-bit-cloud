@@ -1,0 +1,50 @@
+{
+  "name": "@unknown/component",
+  "version": "0.0.1",
+  "private": true,
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "lint": "eslint -c .eslintrc.js src/",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@unknown/harmony": "workspace:*",
+    "@unknown/component-id": "workspace:*",
+    "@unknown/legacy-bit-id": "workspace:*",
+    "@unknown/graphql": "workspace:*",
+    "@unknown/express": "workspace:*",
+    "@unknown/component-issue": "workspace:*",
+    "@unknown/ui-foundation.uis": "workspace:*",
+    "@teambit/any-fs": "0.0.5",
+    "graphql-tag": "2.12.1",
+    "@apollo/client": "3.3.7",
+    "graphql-type-json": "0.3.2",
+    "strip-ansi": "6.0.0",
+    "lodash": "4.17.21",
+    "semver": "7.3.4",
+    "copy-to-clipboard": "3.3.1",
+    "classnames": "2.2.6",
+    "react-router-dom": "6.3.0"
+  },
+  "devDependencies": {
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "@rushstack/eslint-patch": "~1.1.4",
+    "@unknown/ts-config": "workspace:*",
+    "@unknown/eslint-config": "workspace:*",
+    "@types/node": "*",
+    "eslint": "~8.18.0",
+    "tslib": "2.4.0",
+    "typescript": "4.7.4",
+    "@types/react": "17.0.2",
+    "@types/lodash": "4.14.182",
+    "@types/semver": "7.3.4",
+    "@types/classnames": "2.2.11",
+    "graphql": "14.7.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

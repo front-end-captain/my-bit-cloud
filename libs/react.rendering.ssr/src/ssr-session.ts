@@ -1,4 +1,4 @@
-import type { Assets } from "@unknown/ui-foundation.ui.rendering.html";
+import type { Assets } from "@unknown/ui-foundation.uis";
 import type { Request, Response } from "express";
 import { BrowserData } from "./request-browser";
 
