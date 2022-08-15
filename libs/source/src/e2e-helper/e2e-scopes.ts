@@ -1,7 +1,9 @@
 import fs from 'fs-extra';
 import * as path from 'path';
-import { BIT_TEMP_ROOT } from '@teambit/defender.fs.global-bit-temp-dir';
+import * as os from 'os';
 import { generateRandomStr } from '../utils';
+
+export const BIT_TEMP_ROOT = path.join(fs.realpathSync(os.tmpdir()), 'bit');
 
 export const DEFAULT_OWNER = 'ci';
 

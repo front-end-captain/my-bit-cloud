@@ -3,7 +3,7 @@ import { GraphqlAspect, GraphqlMain } from "@unknown/graphql";
 import { Slot, SlotRegistry } from "@unknown/harmony";
 import { ComponentID } from "@unknown/component-id";
 import { flatten } from "lodash";
-import { ExtensionDataList } from "@teambit/legacy/dist/consumer/config";
+import { ExtensionDataList } from "@unknown/source/dist/consumer/config";
 import { ComponentMainRuntime } from './component.aspect';
 import { ComponentFactory } from "./component-factory";
 import { ComponentAspect } from "./component.aspect";

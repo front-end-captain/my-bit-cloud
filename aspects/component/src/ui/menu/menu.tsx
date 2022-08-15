@@ -3,7 +3,7 @@ import { MainDropdown, MenuItemSlot } from '@teambit/ui-foundation.ui.main-dropd
 import { VersionDropdown } from '@teambit/component.ui.version-dropdown';
 import { FullLoader } from '@teambit/ui-foundation.ui.full-loader';
 import type { ConsumeMethod } from '@teambit/ui-foundation.ui.use-box.menu';
-import { useLocation } from '@teambit/base-react.navigation.link';
+import { useLocation } from '@unknown/base-react.navigation.link';
 import { flatten, groupBy, compact } from 'lodash';
 import classnames from 'classnames';
 import React, { useMemo } from 'react';

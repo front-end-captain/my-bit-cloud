@@ -1,25 +1,24 @@
-import arrayDiff from 'array-difference';
-import globby from 'globby';
-import fs from 'fs-extra';
-import ignore from 'ignore';
-import assignwith from 'lodash.assignwith';
-import groupby from 'lodash.groupby';
-import * as path from 'path';
-import R from 'ramda';
-import format from 'string-format';
+import arrayDiff from "array-difference";
+import globby from "globby";
+import fs from "fs-extra";
+import ignore from "ignore";
+import assignwith from "lodash.assignwith";
+import groupby from "lodash.groupby";
+import * as path from "path";
+import R from "ramda";
+import format from "string-format";
 
-import { Analytics } from '../../../analytics/analytics';
-import { BitId, BitIds } from '../../../bit-id';
-import { BitIdStr } from '../../../bit-id/bit-id';
-import { COMPONENT_ORIGINS, PACKAGE_JSON, VERSION_DELIMITER } from '../../../constants';
-import BitMap from '../../../consumer/bit-map';
-import Consumer from '../../../consumer/consumer';
-import GeneralError from '../../../error/general-error';
-import ShowDoctorError from '../../../error/show-doctor-error';
-import { NodeModuleLinker } from '../../../links';
-import { isSupportedExtension } from '../../../links/link-content';
-import logger from '../../../logger/logger';
-import { ModelComponent } from '../../../scope/models';
+import { BitId, BitIds } from "../../../bit-id";
+import { BitIdStr } from "../../../bit-id/bit-id";
+import { COMPONENT_ORIGINS, PACKAGE_JSON, VERSION_DELIMITER } from "../../../constants";
+import BitMap from "../../../consumer/bit-map";
+import Consumer from "../../../consumer/consumer";
+import GeneralError from "../../../error/general-error";
+import ShowDoctorError from "../../../error/show-doctor-error";
+import { NodeModuleLinker } from "../../../links";
+import { isSupportedExtension } from "../../../links/link-content";
+import logger from "../../../logger/logger";
+import { ModelComponent } from "../../../scope/models";
 import {
   calculateFileInfo,
   glob,
@@ -28,12 +27,16 @@ import {
   pathJoinLinux,
   pathNormalizeToLinux,
   retrieveIgnoreList,
-} from '../../../utils';
-import { PathLinux, PathLinuxRelative, PathOsBased } from '../../../utils/path';
-import ComponentMap, { ComponentMapFile, ComponentOrigin, Config } from '../../bit-map/component-map';
-import MissingMainFile from '../../bit-map/exceptions/missing-main-file';
-import ComponentNotFoundInPath from '../../component/exceptions/component-not-found-in-path';
-import determineMainFile from './determine-main-file';
+} from "../../../utils";
+import { PathLinux, PathLinuxRelative, PathOsBased } from "../../../utils/path";
+import ComponentMap, {
+  ComponentMapFile,
+  ComponentOrigin,
+  Config,
+} from "../../bit-map/component-map";
+import MissingMainFile from "../../bit-map/exceptions/missing-main-file";
+import ComponentNotFoundInPath from "../../component/exceptions/component-not-found-in-path";
+import determineMainFile from "./determine-main-file";
 import {
   DuplicateIds,
   EmptyDirectory,
@@ -43,13 +46,13 @@ import {
   MissingComponentIdForImportedComponent,
   NoFiles,
   PathsNotExist,
-} from './exceptions';
-import { AddingIndividualFiles } from './exceptions/adding-individual-files';
-import { IgnoredDirectory } from './exceptions/ignored-directory';
-import MissingMainFileMultipleComponents from './exceptions/missing-main-file-multiple-components';
-import { ParentDirTracked } from './exceptions/parent-dir-tracked';
-import PathOutsideConsumer from './exceptions/path-outside-consumer';
-import VersionShouldBeRemoved from './exceptions/version-should-be-removed';
+} from "./exceptions";
+import { AddingIndividualFiles } from "./exceptions/adding-individual-files";
+import { IgnoredDirectory } from "./exceptions/ignored-directory";
+import MissingMainFileMultipleComponents from "./exceptions/missing-main-file-multiple-components";
+import { ParentDirTracked } from "./exceptions/parent-dir-tracked";
+import PathOutsideConsumer from "./exceptions/path-outside-consumer";
+import VersionShouldBeRemoved from "./exceptions/version-should-be-removed";
 
 export type AddResult = { id: BitId; files: ComponentMapFile[] };
 export type Warnings = {
@@ -158,7 +161,10 @@ export default class AddComponents {
    *
    * @returns array of file-paths from 'files' parameter that match the patterns from 'filesWithPotentialDsl' parameter
    */
-  async getFilesAccordingToDsl(files: PathLinux[], filesWithPotentialDsl: PathOrDSL[]): Promise<PathLinux[]> {
+  async getFilesAccordingToDsl(
+    files: PathLinux[],
+    filesWithPotentialDsl: PathOrDSL[],
+  ): Promise<PathLinux[]> {
     const filesListAllMatches = filesWithPotentialDsl.map(async (dsl) => {
       const filesListMatch = files.map(async (file) => {
         const fileInfo = calculateFileInfo(file);
@@ -175,7 +181,8 @@ export default class AddComponents {
     return filesListUnique.map((file) => {
       // when files array has the test file with different letter case, use the one from the file array
       const fileNormalized = pathNormalizeToLinux(file);
-      const fileWithCorrectCase = files.find((f) => f.toLowerCase() === fileNormalized.toLowerCase()) || fileNormalized;
+      const fileWithCorrectCase =
+        files.find((f) => f.toLowerCase() === fileNormalized.toLowerCase()) || fileNormalized;
       const relativeToConsumer = this.consumer.getPathRelativeToConsumer(fileWithCorrectCase);
       return pathNormalizeToLinux(relativeToConsumer);
     });
@@ -189,19 +196,19 @@ export default class AddComponents {
   async _isGeneratedForUnsupportedFiles(
     fileRelativePath: PathLinux,
     componentId: BitId,
-    componentMap: ComponentMap
+    componentMap: ComponentMap,
   ): Promise<boolean> {
     if (isSupportedExtension(fileRelativePath)) return false;
     const componentFromModel = await this.consumer.loadComponentFromModelIfExist(componentId);
     if (!componentFromModel) {
       throw new ShowDoctorError(
-        `failed finding ${componentId.toString()} in the model although the component is imported, try running "bit import ${componentId.toString()} --objects" to get the component saved in the model`
+        `failed finding ${componentId.toString()} in the model although the component is imported, try running "bit import ${componentId.toString()} --objects" to get the component saved in the model`,
       );
     }
     const dependencies = componentFromModel.getAllDependenciesCloned();
     const sourcePaths = dependencies.getSourcesPaths();
     const sourcePathsRelativeToConsumer = sourcePaths.map((sourcePath) =>
-      pathJoinLinux(componentMap.rootDir, sourcePath)
+      pathJoinLinux(componentMap.rootDir, sourcePath),
     );
     return sourcePathsRelativeToConsumer.includes(fileRelativePath);
   }
@@ -212,9 +219,11 @@ export default class AddComponents {
    */
   _isPackageJsonOnRootDir(pathRelativeToConsumerRoot: PathLinux, componentMap: ComponentMap) {
     if (!componentMap.rootDir || componentMap.origin !== COMPONENT_ORIGINS.IMPORTED) {
-      throw new Error('_isPackageJsonOnRootDir should not get called on non imported components');
+      throw new Error("_isPackageJsonOnRootDir should not get called on non imported components");
     }
-    return path.join(componentMap.rootDir, PACKAGE_JSON) === path.normalize(pathRelativeToConsumerRoot);
+    return (
+      path.join(componentMap.rootDir, PACKAGE_JSON) === path.normalize(pathRelativeToConsumerRoot)
+    );
   }
 
   /**
@@ -223,7 +232,7 @@ export default class AddComponents {
    */
   _isOutsideOfWrapDir(pathRelativeToConsumerRoot: PathLinux, componentMap: ComponentMap) {
     if (!componentMap.rootDir || componentMap.origin !== COMPONENT_ORIGINS.IMPORTED) {
-      throw new Error('_isOutsideOfWrapDir should not get called on non imported components');
+      throw new Error("_isOutsideOfWrapDir should not get called on non imported components");
     }
     if (!componentMap.wrapDir) return false;
     const wrapDirRelativeToConsumerRoot = path.join(componentMap.rootDir, componentMap.wrapDir);
@@ -237,7 +246,9 @@ export default class AddComponents {
    * 2. a user is updating an existing component. there is a record for this component in bit.map
    * 3. some or all the files of this component were previously added as another component-id.
    */
-  async addOrUpdateComponentInBitMap(component: AddedComponent): Promise<AddResult | null | undefined> {
+  async addOrUpdateComponentInBitMap(
+    component: AddedComponent,
+  ): Promise<AddResult | null | undefined> {
     const consumerPath = this.consumer.getPath();
     const parsedBitId = component.componentId;
     const componentFromScope = await this._getComponentFromScopeIfExist(parsedBitId);
@@ -255,32 +266,44 @@ export default class AddComponents {
       const caseSensitive = false;
       const existingIdOfFile = this.bitMap.getComponentIdByPath(file.relativePath, caseSensitive);
       const idOfFileIsDifferent = existingIdOfFile && !existingIdOfFile.isEqual(parsedBitId);
-      const existingComponentOfFile = existingIdOfFile ? this.bitMap.getComponent(existingIdOfFile) : undefined;
+      const existingComponentOfFile = existingIdOfFile
+        ? this.bitMap.getComponent(existingIdOfFile)
+        : undefined;
       const isImported =
-        (foundComponentFromBitMap && foundComponentFromBitMap.origin === COMPONENT_ORIGINS.IMPORTED) ||
+        (foundComponentFromBitMap &&
+          foundComponentFromBitMap.origin === COMPONENT_ORIGINS.IMPORTED) ||
         (existingComponentOfFile && existingComponentOfFile.origin === COMPONENT_ORIGINS.IMPORTED);
       if (isImported) {
         // @ts-ignore AUTO-ADDED-AFTER-MIGRATION-PLEASE-FIX!
-        const idFromBitMap = foundComponentFromBitMap ? foundComponentFromBitMap.id : existingComponentOfFile.id;
+        const idFromBitMap = foundComponentFromBitMap
+          ? foundComponentFromBitMap.id
+          : existingComponentOfFile.id;
         // throw error in case user didn't add id to imported component or the id is incorrect
-        if (!this.id) throw new MissingComponentIdForImportedComponent(idFromBitMap.toStringWithoutVersion());
+        if (!this.id)
+          throw new MissingComponentIdForImportedComponent(idFromBitMap.toStringWithoutVersion());
         if (idOfFileIsDifferent) {
           const existingIdWithoutVersion = existingIdOfFile.toStringWithoutVersion();
           // $FlowFixMe $this.id is not null at this point
-          throw new IncorrectIdForImportedComponent(existingIdWithoutVersion, this.id, file.relativePath);
+          throw new IncorrectIdForImportedComponent(
+            existingIdWithoutVersion,
+            this.id,
+            file.relativePath,
+          );
         }
         // @ts-ignore AUTO-ADDED-AFTER-MIGRATION-PLEASE-FIX!
         if (this._isPackageJsonOnRootDir(file.relativePath, foundComponentFromBitMap)) return null;
         // @ts-ignore AUTO-ADDED-AFTER-MIGRATION-PLEASE-FIX!
         if (this._isOutsideOfWrapDir(file.relativePath, foundComponentFromBitMap)) {
-          logger.warn(`add-components: ignoring ${file.relativePath} as it is located outside of the wrapDir`);
+          logger.warn(
+            `add-components: ignoring ${file.relativePath} as it is located outside of the wrapDir`,
+          );
           return null;
         }
         const isGeneratedForUnsupportedFiles = await this._isGeneratedForUnsupportedFiles(
           file.relativePath,
           component.componentId,
           // @ts-ignore AUTO-ADDED-AFTER-MIGRATION-PLEASE-FIX!
-          foundComponentFromBitMap
+          foundComponentFromBitMap,
         );
         if (isGeneratedForUnsupportedFiles) return null;
         delete component.trackDir;
@@ -309,10 +332,16 @@ export default class AddComponents {
       return file;
     });
     // @ts-ignore it can't be null due to the filter function
-    const componentFiles: ComponentMapFile[] = (await Promise.all(componentFilesP)).filter((file) => file);
+    const componentFiles: ComponentMapFile[] = (await Promise.all(componentFilesP)).filter(
+      (file) => file,
+    );
     if (!componentFiles.length) return { id: component.componentId, files: [] };
     if (foundComponentFromBitMap) {
-      this._updateFilesAccordingToExistingRootDir(foundComponentFromBitMap, componentFiles, component);
+      this._updateFilesAccordingToExistingRootDir(
+        foundComponentFromBitMap,
+        componentFiles,
+        component,
+      );
     }
     if (this.trackDirFeature) {
       // @ts-ignore AUTO-ADDED-AFTER-MIGRATION-PLEASE-FIX!
@@ -323,7 +352,10 @@ export default class AddComponents {
     }
     if (!this.override && foundComponentFromBitMap) {
       this._updateFilesWithCurrentLetterCases(foundComponentFromBitMap, componentFiles);
-      component.files = this._mergeFilesWithExistingComponentMapFiles(componentFiles, foundComponentFromBitMap.files);
+      component.files = this._mergeFilesWithExistingComponentMapFiles(
+        componentFiles,
+        foundComponentFromBitMap.files,
+      );
     } else {
       component.files = componentFiles;
     }
@@ -331,11 +363,15 @@ export default class AddComponents {
     const { componentId, trackDir } = component;
     const mainFile = determineMainFile(component, foundComponentFromBitMap);
     const getRootDir = (): PathLinuxRelative | undefined => {
-      if (this.trackDirFeature) throw new Error('track dir should not calculate the rootDir');
+      if (this.trackDirFeature) throw new Error("track dir should not calculate the rootDir");
       if (foundComponentFromBitMap) return foundComponentFromBitMap.rootDir;
-      if (!trackDir) throw new Error(`addOrUpdateComponentInBitMap expect to have trackDir for non-legacy workspace`);
+      if (!trackDir)
+        throw new Error(
+          `addOrUpdateComponentInBitMap expect to have trackDir for non-legacy workspace`,
+        );
       const fileNotInsideTrackDir = componentFiles.find(
-        (file) => !pathNormalizeToLinux(file.relativePath).startsWith(`${pathNormalizeToLinux(trackDir)}/`)
+        (file) =>
+          !pathNormalizeToLinux(file.relativePath).startsWith(`${pathNormalizeToLinux(trackDir)}/`),
       );
       if (fileNotInsideTrackDir) {
         // we check for this error before. however, it's possible that a user have one trackDir
@@ -372,14 +408,17 @@ export default class AddComponents {
   _updateFilesAccordingToExistingRootDir(
     foundComponentFromBitMap: ComponentMap,
     componentFiles: ComponentMapFile[],
-    component: AddedComponent
+    component: AddedComponent,
   ) {
     const existingRootDir = foundComponentFromBitMap.rootDir;
     if (!existingRootDir) return; // nothing to do.
     const areFilesInsideExistingRootDir = componentFiles.every((file) =>
-      pathNormalizeToLinux(file.relativePath).startsWith(`${existingRootDir}/`)
+      pathNormalizeToLinux(file.relativePath).startsWith(`${existingRootDir}/`),
     );
-    if (foundComponentFromBitMap.origin === COMPONENT_ORIGINS.IMPORTED || areFilesInsideExistingRootDir) {
+    if (
+      foundComponentFromBitMap.origin === COMPONENT_ORIGINS.IMPORTED ||
+      areFilesInsideExistingRootDir
+    ) {
       ComponentMap.changeFilesPathAccordingToItsRootDir(existingRootDir, componentFiles);
       return;
     }
@@ -387,7 +426,8 @@ export default class AddComponents {
     // if a directory was added and it's a parent of the existing rootDir, change the rootDir to
     // the currently added rootDir.
     const currentlyAddedDir = pathNormalizeToLinux(component.trackDir);
-    const currentlyAddedDirParentOfRootDir = currentlyAddedDir && existingRootDir.startsWith(`${currentlyAddedDir}/`);
+    const currentlyAddedDirParentOfRootDir =
+      currentlyAddedDir && existingRootDir.startsWith(`${currentlyAddedDir}/`);
     if (currentlyAddedDirParentOfRootDir) {
       foundComponentFromBitMap.changeRootDirAndUpdateFilesAccordingly(currentlyAddedDir);
       ComponentMap.changeFilesPathAccordingToItsRootDir(currentlyAddedDir, componentFiles);
@@ -406,9 +446,9 @@ you can add the directory these files are located at and it'll change the root d
    */
   _mergeFilesWithExistingComponentMapFiles(
     componentFiles: ComponentMapFile[],
-    existingComponentMapFile: ComponentMapFile[]
+    existingComponentMapFile: ComponentMapFile[],
   ) {
-    return R.unionWith(R.eqBy(R.prop('relativePath')), existingComponentMapFile, componentFiles);
+    return R.unionWith(R.eqBy(R.prop("relativePath")), existingComponentMapFile, componentFiles);
   }
 
   /**
@@ -417,11 +457,14 @@ you can add the directory these files are located at and it'll change the root d
    * it's safer to avoid saving both files and instead, replacing the old file with the new one.
    * in case a file has replaced and it is also a mainFile, replace the mainFile as well
    */
-  _updateFilesWithCurrentLetterCases(currentComponentMap: ComponentMap, newFiles: ComponentMapFile[]) {
+  _updateFilesWithCurrentLetterCases(
+    currentComponentMap: ComponentMap,
+    newFiles: ComponentMapFile[],
+  ) {
     const currentFiles = currentComponentMap.files;
     currentFiles.forEach((currentFile) => {
       const sameFile = newFiles.find(
-        (newFile) => newFile.relativePath.toLowerCase() === currentFile.relativePath.toLowerCase()
+        (newFile) => newFile.relativePath.toLowerCase() === currentFile.relativePath.toLowerCase(),
       );
       if (sameFile && currentFile.relativePath !== sameFile.relativePath) {
         if (currentComponentMap.mainFile === currentFile.relativePath) {
@@ -543,90 +586,108 @@ you can add the directory these files are located at and it'll change the root d
       finalBitId = this._getIdAccordingToExistingComponent(this.id);
     }
 
-    const componentsWithFilesP = Object.keys(componentPathsStats).map(async (componentPath: PathOsBased) => {
-      if (componentPathsStats[componentPath].isDir) {
-        const relativeComponentPath = this.consumer.getPathRelativeToConsumer(componentPath);
-        this._throwForOutsideConsumer(relativeComponentPath);
-        this.throwForExistingParentDir(relativeComponentPath);
-        const matches = await glob(path.join(relativeComponentPath, '**'), {
-          cwd: this.consumer.getPath(),
-          nodir: true,
-        });
+    const componentsWithFilesP = Object.keys(componentPathsStats).map(
+      async (componentPath: PathOsBased) => {
+        if (componentPathsStats[componentPath].isDir) {
+          const relativeComponentPath = this.consumer.getPathRelativeToConsumer(componentPath);
+          this._throwForOutsideConsumer(relativeComponentPath);
+          this.throwForExistingParentDir(relativeComponentPath);
+          const matches = await glob(path.join(relativeComponentPath, "**"), {
+            cwd: this.consumer.getPath(),
+            nodir: true,
+          });
 
-        const filteredMatches = this.gitIgnore.filter(matches);
+          const filteredMatches = this.gitIgnore.filter(matches);
 
-        if (!filteredMatches.length) throw new EmptyDirectory(componentPath);
+          if (!filteredMatches.length) throw new EmptyDirectory(componentPath);
 
-        const filteredMatchedFiles = filteredMatches.map((match: PathOsBased) => {
-          return { relativePath: pathNormalizeToLinux(match), test: false, name: path.basename(match) };
-        });
-        const resolvedMainFile = this._addMainFileToFiles(filteredMatchedFiles);
+          const filteredMatchedFiles = filteredMatches.map((match: PathOsBased) => {
+            return {
+              relativePath: pathNormalizeToLinux(match),
+              test: false,
+              name: path.basename(match),
+            };
+          });
+          const resolvedMainFile = this._addMainFileToFiles(filteredMatchedFiles);
 
-        const absoluteComponentPath = path.resolve(componentPath);
-        const splitPath = absoluteComponentPath.split(path.sep);
-        const lastDir = splitPath[splitPath.length - 1];
-        if (!finalBitId) {
-          const idOfTrackDir = this._getIdAccordingToTrackDir(componentPath);
-          if (idOfTrackDir) {
-            finalBitId = idOfTrackDir;
-          } else {
-            const nameSpaceOrDir = this.namespace || splitPath[splitPath.length - 2];
-            if (!this.namespace) {
-              idFromPath = { namespace: BitId.getValidIdChunk(nameSpaceOrDir), name: BitId.getValidIdChunk(lastDir) };
+          const absoluteComponentPath = path.resolve(componentPath);
+          const splitPath = absoluteComponentPath.split(path.sep);
+          const lastDir = splitPath[splitPath.length - 1];
+          if (!finalBitId) {
+            const idOfTrackDir = this._getIdAccordingToTrackDir(componentPath);
+            if (idOfTrackDir) {
+              finalBitId = idOfTrackDir;
+            } else {
+              const nameSpaceOrDir = this.namespace || splitPath[splitPath.length - 2];
+              if (!this.namespace) {
+                idFromPath = {
+                  namespace: BitId.getValidIdChunk(nameSpaceOrDir),
+                  name: BitId.getValidIdChunk(lastDir),
+                };
+              }
+              finalBitId = BitId.getValidBitId(nameSpaceOrDir, lastDir);
             }
-            finalBitId = BitId.getValidBitId(nameSpaceOrDir, lastDir);
           }
-        }
 
-        const getTrackDir = () => {
-          if (Object.keys(componentPathsStats).length === 1 && this.origin === COMPONENT_ORIGINS.AUTHORED) {
-            return relativeComponentPath;
-          }
-          return undefined;
-        };
-        const trackDir = getTrackDir();
+          const getTrackDir = () => {
+            if (
+              Object.keys(componentPathsStats).length === 1 &&
+              this.origin === COMPONENT_ORIGINS.AUTHORED
+            ) {
+              return relativeComponentPath;
+            }
+            return undefined;
+          };
+          const trackDir = getTrackDir();
 
-        return {
-          componentId: finalBitId,
-          files: filteredMatchedFiles,
-          mainFile: resolvedMainFile,
-          trackDir,
-          idFromPath,
-          immediateDir: lastDir,
-        };
-      }
-      // is file
-      const absolutePath = path.resolve(componentPath);
-      const pathParsed = path.parse(absolutePath);
-      const relativeFilePath = this.consumer.getPathRelativeToConsumer(componentPath);
-      this._throwForOutsideConsumer(relativeFilePath);
-      if (!finalBitId) {
-        let dirName = pathParsed.dir;
-        if (!dirName) {
-          dirName = path.dirname(absolutePath);
-        }
-        const nameSpaceOrLastDir = this.namespace || R.last(dirName.split(path.sep));
-        if (!this.namespace) {
-          idFromPath = {
-            namespace: BitId.getValidIdChunk(nameSpaceOrLastDir),
-            name: BitId.getValidIdChunk(pathParsed.name),
+          return {
+            componentId: finalBitId,
+            files: filteredMatchedFiles,
+            mainFile: resolvedMainFile,
+            trackDir,
+            idFromPath,
+            immediateDir: lastDir,
           };
         }
-        finalBitId = BitId.getValidBitId(nameSpaceOrLastDir, pathParsed.name);
-      }
+        // is file
+        const absolutePath = path.resolve(componentPath);
+        const pathParsed = path.parse(absolutePath);
+        const relativeFilePath = this.consumer.getPathRelativeToConsumer(componentPath);
+        this._throwForOutsideConsumer(relativeFilePath);
+        if (!finalBitId) {
+          let dirName = pathParsed.dir;
+          if (!dirName) {
+            dirName = path.dirname(absolutePath);
+          }
+          const nameSpaceOrLastDir = this.namespace || R.last(dirName.split(path.sep));
+          if (!this.namespace) {
+            idFromPath = {
+              namespace: BitId.getValidIdChunk(nameSpaceOrLastDir),
+              name: BitId.getValidIdChunk(pathParsed.name),
+            };
+          }
+          finalBitId = BitId.getValidBitId(nameSpaceOrLastDir, pathParsed.name);
+        }
 
-      const files = [
-        { relativePath: pathNormalizeToLinux(relativeFilePath), test: false, name: path.basename(relativeFilePath) },
-      ];
-      const resolvedMainFile = this._addMainFileToFiles(files);
-      return { componentId: finalBitId, files, mainFile: resolvedMainFile, idFromPath };
-    });
+        const files = [
+          {
+            relativePath: pathNormalizeToLinux(relativeFilePath),
+            test: false,
+            name: path.basename(relativeFilePath),
+          },
+        ];
+        const resolvedMainFile = this._addMainFileToFiles(files);
+        return { componentId: finalBitId, files, mainFile: resolvedMainFile, idFromPath };
+      },
+    );
 
     let componentsWithFiles: AddedComponent[] = await Promise.all(componentsWithFilesP);
 
     // @ts-ignore AUTO-ADDED-AFTER-MIGRATION-PLEASE-FIX!
     const componentId = finalBitId;
-    componentsWithFiles = componentsWithFiles.filter((componentWithFiles) => componentWithFiles.files.length);
+    componentsWithFiles = componentsWithFiles.filter(
+      (componentWithFiles) => componentWithFiles.files.length,
+    );
 
     // @ts-ignore AUTO-ADDED-AFTER-MIGRATION-PLEASE-FIX!
     if (componentsWithFiles.length === 0) return { componentId, files: [] };
@@ -636,9 +697,9 @@ you can add the directory these files are located at and it'll change the root d
       // @ts-ignore AUTO-ADDED-AFTER-MIGRATION-PLEASE-FIX!
       return a.concat(b.files);
     }, []);
-    const groupedComponents = groupby(files, 'relativePath');
+    const groupedComponents = groupby(files, "relativePath");
     const uniqComponents = Object.keys(groupedComponents).map((key) =>
-      assignwith({}, ...groupedComponents[key], (val1, val2) => val1 || val2)
+      assignwith({}, ...groupedComponents[key], (val1, val2) => val1 || val2),
     );
     return {
       componentId,
@@ -661,13 +722,18 @@ you can add the directory these files are located at and it'll change the root d
     let componentPathsStats: PathsStats = {};
 
     const resolvedComponentPathsWithoutGitIgnore = R.flatten(
-      await Promise.all(this.componentPaths.map((componentPath) => glob(componentPath)))
+      await Promise.all(this.componentPaths.map((componentPath) => glob(componentPath))),
     );
     this.gitIgnore = ignore().add(this.ignoreList); // add ignore list
 
-    const resolvedComponentPathsWithGitIgnore = this.gitIgnore.filter(resolvedComponentPathsWithoutGitIgnore);
+    const resolvedComponentPathsWithGitIgnore = this.gitIgnore.filter(
+      resolvedComponentPathsWithoutGitIgnore,
+    );
     // Run diff on both arrays to see what was filtered out because of the gitignore file
-    const diff = arrayDiff(resolvedComponentPathsWithGitIgnore, resolvedComponentPathsWithoutGitIgnore);
+    const diff = arrayDiff(
+      resolvedComponentPathsWithGitIgnore,
+      resolvedComponentPathsWithoutGitIgnore,
+    );
 
     if (R.isEmpty(resolvedComponentPathsWithoutGitIgnore)) {
       throw new PathsNotExist(this.componentPaths);
@@ -688,7 +754,7 @@ you can add the directory these files are located at and it'll change the root d
     if (isMultipleComponents) {
       await this.addMultipleComponents(componentPathsStats);
     } else {
-      logger.debugAndAddBreadCrumb('add-components', 'adding one component');
+      logger.debugAndAddBreadCrumb("add-components", "adding one component");
       // when a user enters more than one directory, he would like to keep the directories names
       // so then when a component is imported, it will write the files into the original directories
       const addedOne = await this.addOneComponent(componentPathsStats);
@@ -699,7 +765,6 @@ you can add the directory these files are located at and it'll change the root d
       }
     }
     await this.linkComponents(this.addedComponents.map((item) => item.id));
-    Analytics.setExtraData('num_components', this.addedComponents.length);
     return { addedComponents: this.addedComponents, warnings: this.warnings };
   }
 
@@ -715,7 +780,7 @@ you can add the directory these files are located at and it'll change the root d
   }
 
   async addMultipleComponents(componentPathsStats: PathsStats): Promise<void> {
-    logger.debugAndAddBreadCrumb('add-components', 'adding multiple components');
+    logger.debugAndAddBreadCrumb("add-components", "adding multiple components");
     this._removeDirectoriesWhenTheirFilesAreAdded(componentPathsStats);
     const added = await this._tryAddingMultiple(componentPathsStats);
     validateNoDuplicateIds(added);
@@ -733,7 +798,9 @@ you can add the directory these files are located at and it'll change the root d
     allPaths.forEach((componentPath) => {
       const foundDir = allPaths.find((p) => p === path.dirname(componentPath));
       if (foundDir && componentPathsStats[foundDir]) {
-        logger.debug(`add-components._removeDirectoriesWhenTheirFilesAreAdded, ignoring ${foundDir}`);
+        logger.debug(
+          `add-components._removeDirectoriesWhenTheirFilesAreAdded, ignoring ${foundDir}`,
+        );
         delete componentPathsStats[foundDir];
       }
     });
@@ -746,18 +813,21 @@ you can add the directory these files are located at and it'll change the root d
         if (!R.isEmpty(component.files)) {
           try {
             const addedComponent = await this.addOrUpdateComponentInBitMap(component);
-            if (addedComponent && addedComponent.files.length) this.addedComponents.push(addedComponent);
+            if (addedComponent && addedComponent.files.length)
+              this.addedComponents.push(addedComponent);
           } catch (err: any) {
             if (!(err instanceof MissingMainFile)) throw err;
             // @ts-ignore AUTO-ADDED-AFTER-MIGRATION-PLEASE-FIX!
             missingMainFiles.push(err);
           }
         }
-      })
+      }),
     );
     if (missingMainFiles.length) {
       // @ts-ignore AUTO-ADDED-AFTER-MIGRATION-PLEASE-FIX!
-      throw new MissingMainFileMultipleComponents(missingMainFiles.map((err) => err.componentId).sort());
+      throw new MissingMainFileMultipleComponents(
+        missingMainFiles.map((err) => err.componentId).sort(),
+      );
     }
   }
 
@@ -793,7 +863,7 @@ you can add the directory these files are located at and it'll change the root d
   }
 
   _throwForOutsideConsumer(relativeToConsumerPath: PathOsBased) {
-    if (relativeToConsumerPath.startsWith('..')) {
+    if (relativeToConsumerPath.startsWith("..")) {
       throw new PathOutsideConsumer(relativeToConsumerPath);
     }
   }
@@ -801,7 +871,7 @@ you can add the directory these files are located at and it'll change the root d
   private throwForExistingParentDir(relativeToConsumerPath: PathOsBased) {
     const isParentDir = (parent: string) => {
       const relative = path.relative(parent, relativeToConsumerPath);
-      return relative && !relative.startsWith('..') && !path.isAbsolute(relative);
+      return relative && !relative.startsWith("..") && !path.isAbsolute(relative);
     };
     this.bitMap.components.forEach((componentMap) => {
       if (!componentMap.rootDir) return;
@@ -809,7 +879,7 @@ you can add the directory these files are located at and it'll change the root d
         throw new ParentDirTracked(
           componentMap.rootDir,
           componentMap.id.toStringWithoutVersion(),
-          relativeToConsumerPath
+          relativeToConsumerPath,
         );
       }
     });
@@ -840,14 +910,18 @@ function validatePaths(fileArray: string[]): PathsStats {
  */
 function validateNoDuplicateIds(addComponents: Record<string, any>[]) {
   const duplicateIds = {};
-  const newGroupedComponents = groupby(addComponents, 'componentId');
+  const newGroupedComponents = groupby(addComponents, "componentId");
   Object.keys(newGroupedComponents).forEach((key) => {
     if (newGroupedComponents[key].length > 1) duplicateIds[key] = newGroupedComponents[key];
   });
   if (!R.isEmpty(duplicateIds) && !R.isNil(duplicateIds)) throw new DuplicateIds(duplicateIds);
 }
 
-export async function getFilesByDir(dir: string, consumerPath: string, gitIgnore: any): Promise<ComponentMapFile[]> {
+export async function getFilesByDir(
+  dir: string,
+  consumerPath: string,
+  gitIgnore: any,
+): Promise<ComponentMapFile[]> {
   const matches = await globby(dir, {
     cwd: consumerPath,
     onlyFiles: true,
@@ -858,7 +932,7 @@ export async function getFilesByDir(dir: string, consumerPath: string, gitIgnore
   return filteredMatches.map((match: PathOsBased) => {
     const normalizedPath = pathNormalizeToLinux(match);
     // the path is relative to consumer. remove the rootDir.
-    const relativePath = normalizedPath.replace(`${dir}/`, '');
+    const relativePath = normalizedPath.replace(`${dir}/`, "");
     return { relativePath, test: false, name: path.basename(match) };
   });
 }

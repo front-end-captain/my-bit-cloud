@@ -1,8 +1,8 @@
-import { useQuery } from '@teambit/ui-foundation.ui.react-router.use-query';
-import { ComponentDescriptor } from '@teambit/component-descriptor';
-import { ComponentModel } from './component-model';
-import { ComponentError } from './component-error';
-import { Filters, useComponentQuery } from './use-component-query';
+import { useQuery } from "@unknown/ui-foundation.uis";
+import { ComponentDescriptor } from "../component-descriptor";
+import { ComponentModel } from "./component-model";
+import { ComponentError } from "./component-error";
+import { Filters, useComponentQuery } from "./use-component-query";
 
 export type Component = {
   component?: ComponentModel;
@@ -21,9 +21,9 @@ export type UseComponentType = (id: string, host: string, filters?: Filters) => 
 export function useComponent(host: string, id?: string, options?: UseComponentOptions): Component {
   const query = useQuery();
   const { version, logFilters, customUseComponent } = options || {};
-  const componentVersion = (version || query.get('version')) ?? undefined;
+  const componentVersion = (version || query.get("version")) ?? undefined;
 
-  if (!id) throw new TypeError('useComponent received no component id');
+  if (!id) throw new TypeError("useComponent received no component id");
 
   const componentIdStr = withVersion(id, componentVersion);
   const targetUseComponent = customUseComponent || useComponentQuery;
@@ -33,6 +33,6 @@ export function useComponent(host: string, id?: string, options?: UseComponentOp
 
 function withVersion(id: string, version?: string) {
   if (!version) return id;
-  if (id.includes('@')) return id;
+  if (id.includes("@")) return id;
   return `${id}@${version}`;
 }

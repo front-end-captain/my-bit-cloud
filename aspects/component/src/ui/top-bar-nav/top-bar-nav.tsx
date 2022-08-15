@@ -1,7 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import { useLocation } from 'react-router-dom';
-import { Link, LinkProps } from '@teambit/base-react.navigation.link';
+import { Link, LinkProps } from '@unknown/base-react.navigation.link';
 
 import styles from './top-bar-nav.module.scss';
 

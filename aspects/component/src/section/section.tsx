@@ -1,4 +1,4 @@
-import type { LinkProps } from "@teambit/base-react.navigation.link";
+import type { LinkProps } from "@unknown/base-react.navigation.link";
 import { RouteProps } from "react-router-dom";
 
 export interface Section {

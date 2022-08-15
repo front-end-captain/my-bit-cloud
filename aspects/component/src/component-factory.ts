@@ -1,12 +1,12 @@
-import { BitId } from '@unknown/legacy-bit-id';
-import LegacyGraph from '@teambit/legacy/dist/scope/graph/graph';
-import ConsumerComponent from '@teambit/legacy/dist/consumer/component';
-import type { ComponentLog } from '@teambit/legacy/dist/scope/models/model-component';
-import type { AspectDefinition } from '@teambit/aspect-loader';
-import { ComponentID } from '@teambit/component-id';
-import { Component, InvalidComponent } from './component';
-import { State } from './state';
-import { Snap } from './snap';
+import { BitId } from "@unknown/legacy-bit-id";
+import LegacyGraph from "@unknown/source/dist/scope/graph/graph";
+import ConsumerComponent from "@unknown/source/dist/consumer/component";
+import type { ComponentLog } from "@unknown/source/dist/scope/models/model-component";
+import type { AspectDefinition } from "@teambit/aspect-loader";
+import { ComponentID } from "@unknown/component-id";
+import { Component, InvalidComponent } from "./component";
+import { State } from "./state";
+import { Snap } from "./snap";
 
 export type ResolveAspectsOptions = {
   /**
@@ -48,7 +48,7 @@ export interface ComponentFactory {
   get(
     id: ComponentID | string,
     withState?: boolean,
-    consumerComponent?: ConsumerComponent
+    consumerComponent?: ConsumerComponent,
   ): Promise<Component | undefined>;
 
   /**
@@ -92,7 +92,7 @@ export interface ComponentFactory {
   resolveAspects: (
     runtimeName?: string,
     componentIds?: ComponentID[],
-    opts?: ResolveAspectsOptions
+    opts?: ResolveAspectsOptions,
   ) => Promise<AspectDefinition[]>;
 
   /**

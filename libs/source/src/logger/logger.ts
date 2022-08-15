@@ -4,25 +4,24 @@
  * also, Winston should start BEFORE Pino. otherwise, Pino starts creating the debug.log file first
  * and it throws an error if the file doesn't exists on Docker/CI.
  */
-import chalk from 'chalk';
-import { serializeError } from 'serialize-error';
-import format from 'string-format';
-import { Logger as PinoLogger, Level } from 'pino';
-import yn from 'yn';
-import { Analytics } from '../analytics/analytics';
-import { getSync } from '../api/consumer/lib/global-config';
-import defaultHandleError from '../cli/default-error-handler';
-import { CFG_LOG_JSON_FORMAT, CFG_LOG_LEVEL, CFG_NO_WARNINGS } from '../constants';
-import { getWinstonLogger } from './winston-logger';
-import { getPinoLogger } from './pino-logger';
-import { Profiler } from './profiler';
+import chalk from "chalk";
+import format from "string-format";
+import { Logger as PinoLogger, Level } from "pino";
+import yn from "yn";
+import { getSync } from "../api/consumer/lib/global-config";
+import defaultHandleError from "../cli/default-error-handler";
+import { CFG_LOG_JSON_FORMAT, CFG_LOG_LEVEL, CFG_NO_WARNINGS } from "../constants";
+import { getWinstonLogger } from "./winston-logger";
+import { getPinoLogger } from "./pino-logger";
+import { Profiler } from "./profiler";
 
 export { Level as LoggerLevel };
 
 const jsonFormat =
-  yn(getSync(CFG_LOG_JSON_FORMAT), { default: false }) || yn(process.env.JSON_LOGS, { default: false });
+  yn(getSync(CFG_LOG_JSON_FORMAT), { default: false }) ||
+  yn(process.env.JSON_LOGS, { default: false });
 
-const LEVELS = ['fatal', 'error', 'warn', 'info', 'debug', 'trace'];
+const LEVELS = ["fatal", "error", "warn", "info", "debug", "trace"];
 
 const logLevel = getLogLevel();
 
@@ -67,7 +66,7 @@ class BitLogger implements IBitLogger {
    * it set before the command-registrar is loaded. at this stage we don't know for sure the "-j"
    * is actually "json". that's why this variable is overridden once the command-registrar is up.
    */
-  shouldWriteToConsole = !process.argv.includes('--json') && !process.argv.includes('-j');
+  shouldWriteToConsole = !process.argv.includes("--json") && !process.argv.includes("-j");
 
   constructor(logger: PinoLogger) {
     this.logger = logger;
@@ -113,7 +112,7 @@ class BitLogger implements IBitLogger {
    * use this instead of calling `console.log()`, this way it won't break commands that don't
    * expect output during the execution.
    */
-  console(msg?: string | Error, level: Level = 'info', color?: string) {
+  console(msg?: string | Error, level: Level = "info", color?: string) {
     if (!msg) {
       return;
     }
@@ -132,7 +131,7 @@ class BitLogger implements IBitLogger {
       try {
         messageStr = chalk.keyword(color)(messageStr);
       } catch (e: any) {
-        this.trace('a wrong color provided to logger.console method');
+        this.trace("a wrong color provided to logger.console method");
       }
     }
     pinoLoggerConsole[level](messageStr);
@@ -160,10 +159,9 @@ class BitLogger implements IBitLogger {
     console ? this.console(fullMsg) : this.info(fullMsg);
   }
 
-  async exitAfterFlush(code = 0, commandName: string, cliOutput = '') {
-    await Analytics.sendData();
+  async exitAfterFlush(code = 0, commandName: string, cliOutput = "") {
     const isSuccess = code === 0;
-    const level = isSuccess ? 'info' : 'error';
+    const level = isSuccess ? "info" : "error";
     if (cliOutput) {
       this.logger.info(`[+] CLI-OUTPUT: ${cliOutput}`);
     }
@@ -182,22 +180,27 @@ class BitLogger implements IBitLogger {
     category: string,
     message: string,
     data?: Record<string, any>,
-    extraData?: Record<string, any>
+    extraData?: Record<string, any>,
   ) {
-    this.addToLoggerAndToBreadCrumb('debug', category, message, data, extraData);
+    this.addToLoggerAndToBreadCrumb("debug", category, message, data, extraData);
   }
 
-  warnAndAddBreadCrumb(category: string, message: string, data?: Record<string, any>, extraData?: Record<string, any>) {
-    this.addToLoggerAndToBreadCrumb('warn', category, message, data, extraData);
+  warnAndAddBreadCrumb(
+    category: string,
+    message: string,
+    data?: Record<string, any>,
+    extraData?: Record<string, any>,
+  ) {
+    this.addToLoggerAndToBreadCrumb("warn", category, message, data, extraData);
   }
 
   errorAndAddBreadCrumb(
     category: string,
     message: string,
     data?: Record<string, any>,
-    extraData?: Record<string, any>
+    extraData?: Record<string, any>,
   ) {
-    this.addToLoggerAndToBreadCrumb('error', category, message, data, extraData);
+    this.addToLoggerAndToBreadCrumb("error", category, message, data, extraData);
   }
 
   private addToLoggerAndToBreadCrumb(
@@ -205,18 +208,17 @@ class BitLogger implements IBitLogger {
     category: string,
     message: string,
     data?: Record<string, any>,
-    extraData?: Record<string, any> | null | undefined
+    extraData?: Record<string, any> | null | undefined,
   ) {
-    if (!category) throw new TypeError('addToLoggerAndToBreadCrumb, category is missing');
-    if (!message) throw new TypeError('addToLoggerAndToBreadCrumb, message is missing');
+    if (!category) throw new TypeError("addToLoggerAndToBreadCrumb, category is missing");
+    if (!message) throw new TypeError("addToLoggerAndToBreadCrumb, message is missing");
     const messageWithData = data ? format(message, data) : message;
     this.logger[level](`${category}, ${messageWithData}`, extraData);
-    addBreadCrumb(category, message, data, extraData);
   }
 
   switchToConsoleLogger(level?: Level) {
     this.logger = pinoLoggerConsole;
-    this.logger.level = level || 'debug';
+    this.logger.level = level || "debug";
   }
 }
 
@@ -224,19 +226,11 @@ const logger = new BitLogger(pinoLogger);
 
 export const printWarning = (msg: string) => {
   const cfgNoWarnings = getSync(CFG_NO_WARNINGS);
-  if (cfgNoWarnings !== 'true') {
+  if (cfgNoWarnings !== "true") {
     // eslint-disable-next-line no-console
     console.log(chalk.yellow(`Warning: ${msg}`));
   }
 };
-
-function addBreadCrumb(category: string, message: string, data: Record<string, any> = {}, extraData) {
-  const hashedData = {};
-  Object.keys(data).forEach((key) => (hashedData[key] = Analytics.hashData(data[key])));
-  const messageWithHashedData = format(message, hashedData);
-  extraData = extraData instanceof Error ? serializeError(extraData) : extraData;
-  Analytics.addBreadCrumb(category, messageWithHashedData, extraData);
-}
 
 function determineWritingLogToScreen() {
   /**
@@ -253,9 +247,9 @@ function determineWritingLogToScreen() {
 
   // more common scenario is when the user enters `--log` flag. It can be just "--log", which defaults to info.
   // or it can have a level: `--log=error` or `--log error`: both syntaxes are supported
-  if (process.argv.includes('--log')) {
+  if (process.argv.includes("--log")) {
     const level = process.argv.find((arg) => LEVELS.includes(arg)) as Level | undefined;
-    logger.switchToConsoleLogger(level || 'info');
+    logger.switchToConsoleLogger(level || "info");
     return;
   }
   LEVELS.forEach((level) => {
@@ -268,13 +262,13 @@ function determineWritingLogToScreen() {
 determineWritingLogToScreen();
 
 function getLogLevel(): Level {
-  const defaultLevel = 'debug';
+  const defaultLevel = "debug";
   const level = getSync(CFG_LOG_LEVEL) || defaultLevel;
   if (isLevel(level)) return level;
-  const levelsStr = LEVELS.join(', ');
+  const levelsStr = LEVELS.join(", ");
   // eslint-disable-next-line no-console
   console.error(
-    `fatal: level "${level}" coming from ${CFG_LOG_LEVEL} configuration is invalid. permitted levels are: ${levelsStr}`
+    `fatal: level "${level}" coming from ${CFG_LOG_LEVEL} configuration is invalid. permitted levels are: ${levelsStr}`,
   );
   return defaultLevel;
 }
@@ -283,7 +277,7 @@ function isLevel(maybeLevel: Level | string): maybeLevel is Level {
   return LEVELS.includes(maybeLevel);
 }
 
-export function writeLogToScreen(levelOrPrefix = '') {
+export function writeLogToScreen(levelOrPrefix = "") {
   if (isLevel(levelOrPrefix)) {
     logger.switchToConsoleLogger(levelOrPrefix);
   }

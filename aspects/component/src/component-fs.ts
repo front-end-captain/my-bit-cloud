@@ -1,8 +1,8 @@
-import { MemoryFS } from '@teambit/any-fs';
-import type { AbstractVinyl } from '@teambit/legacy/dist/consumer/component/sources';
-import { auto } from '@teambit/legacy/dist/utils/eol';
-import path from 'path';
-import { matchPatterns, splitPatterns } from '@teambit/toolbox.path.match-patterns';
+import { MemoryFS } from "@teambit/any-fs";
+import type { AbstractVinyl } from "@unknown/source/dist/consumer/component/sources";
+import { auto } from "@unknown/source/dist/utils/eol";
+import path from "path";
+import { matchPatterns, splitPatterns } from "@teambit/toolbox.path.match-patterns";
 
 /**
  * The virtual component filesystem
@@ -12,7 +12,7 @@ export default class ComponentFS extends MemoryFS {
     /**
      * array of all fs files.
      */
-    readonly files: AbstractVinyl[]
+    readonly files: AbstractVinyl[],
   ) {
     super();
   }
@@ -20,7 +20,7 @@ export default class ComponentFS extends MemoryFS {
    * hash to represent all contents within this filesystem volume.
    */
   get hash() {
-    return '';
+    return "";
   }
 
   /**
@@ -56,9 +56,9 @@ export default class ComponentFS extends MemoryFS {
     const fs = new ComponentFS(files);
     files.forEach((file) => {
       let dirPath = file.relativeDir;
-      if (!dirPath.startsWith('/')) dirPath = path.join('/', dirPath);
+      if (!dirPath.startsWith("/")) dirPath = path.join("/", dirPath);
       fs.mkdirpSync(dirPath);
-      fs.writeFileSync(`/${file.relative}`, auto(file.contents || ''));
+      fs.writeFileSync(`/${file.relative}`, auto(file.contents || ""));
     });
 
     return fs;

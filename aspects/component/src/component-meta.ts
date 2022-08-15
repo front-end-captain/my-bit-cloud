@@ -1,20 +1,20 @@
-import { capitalize } from '@teambit/toolbox.string.capitalize';
-import { ComponentID } from '@teambit/component-id';
+import { capitalize } from "@teambit/toolbox.string.capitalize";
+import { ComponentID } from "@unknown/component-id";
 
 export class ComponentMeta {
   constructor(
     /**
      * id the component.
      */
-    readonly id: ComponentID
+    readonly id: ComponentID,
   ) {}
 
   /**
    * display name of the component.
    */
   get displayName() {
-    const tokens = this.id.name.split('-').map((token) => capitalize(token));
-    return tokens.join(' ');
+    const tokens = this.id.name.split("-").map((token) => capitalize(token));
+    return tokens.join(" ");
   }
 
   toObject() {

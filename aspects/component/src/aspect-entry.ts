@@ -2,9 +2,9 @@
  * avoid importing any (non-type) legacy code here. otherwise, PreviewTask will throw cryptic errors
  */
 
-import type { ExtensionDataEntry } from '@teambit/legacy/dist/consumer/config/extension-data';
-import { ComponentID } from '@unknown/component-id';
-import { RawComponentMetadata } from './component-interface';
+import type { ExtensionDataEntry } from "@unknown/source/dist/consumer/config/extension-data";
+import { ComponentID } from "@unknown/component-id";
+import { RawComponentMetadata } from "./component-interface";
 
 export type Serializable = {
   toString(): string;
@@ -67,7 +67,7 @@ export class AspectEntry {
       id: this.id.toString(),
       config: this.config,
       data: this.data,
-      icon: 'https://static.bit.dev/extensions-icons/default.svg', // TODO @gilad - once you connect the icon here please use this url as the default icon
+      icon: "https://static.bit.dev/extensions-icons/default.svg", // TODO @gilad - once you connect the icon here please use this url as the default icon
     };
   }
 }

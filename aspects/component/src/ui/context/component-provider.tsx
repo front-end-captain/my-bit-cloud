@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import type { ComponentDescriptor } from '@teambit/component-descriptor';
+import type { ComponentDescriptor } from '@unknown/component-descriptor';
 import { ComponentModel } from '../component-model';
 import { ComponentContext, ComponentDescriptorContext } from './component-context';
 

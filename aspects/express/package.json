@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.js",
   "scripts": {
     "lint": "eslint -c .eslintrc.js src/",
     "build": "tsc"

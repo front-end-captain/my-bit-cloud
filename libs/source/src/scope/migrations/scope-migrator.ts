@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import R from "ramda";
 import { BitObject, BitRawObject, Ref } from "../objects";
@@ -141,7 +142,7 @@ function _addObjectRefsToIndex(index: { [string]: BitRawObject }, rawObject: Bit
 // @ts-ignore AUTO-ADDED-AFTER-MIGRATION-PLEASE-FIX!
 // @ts-ignore AUTO-ADDED-AFTER-MIGRATION-PLEASE-FIX!
 const _updateRefsForObjects = (
-  index: { [string]: BitRawObject },
+  index: Record<string, BitRawObject>,
   oldRef: string,
   newRef: string,
 ): BitObject => {

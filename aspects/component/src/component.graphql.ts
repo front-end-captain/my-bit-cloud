@@ -1,10 +1,10 @@
-import stripAnsi from 'strip-ansi';
-import gql from 'graphql-tag';
-import { GraphQLJSONObject } from 'graphql-type-json';
-import { pathNormalizeToLinux } from '@teambit/legacy/dist/utils';
-import { Component } from './component';
-import { ComponentFactory } from './component-factory';
-import { ComponentMain } from './component.main.runtime';
+import stripAnsi from "strip-ansi";
+import gql from "graphql-tag";
+import { GraphQLJSONObject } from "graphql-type-json";
+import { pathNormalizeToLinux } from "@unknown/source/dist/utils";
+import { Component } from "./component";
+import { ComponentFactory } from "./component-factory";
+import { ComponentMain } from "./component.main.runtime";
 
 export function componentSchema(componentExtension: ComponentMain) {
   return {
@@ -142,10 +142,10 @@ export function componentSchema(componentExtension: ComponentMain) {
         },
         getFile: (component: Component, { path }: { path: string }) => {
           const maybeFile = component.state.filesystem.files.find(
-            (file) => pathNormalizeToLinux(file.relative) === path
+            (file) => pathNormalizeToLinux(file.relative) === path,
           );
           if (!maybeFile) return undefined;
-          return maybeFile.contents.toString('utf-8');
+          return maybeFile.contents.toString("utf-8");
         },
         mainFile: (component: Component) => {
           return component.state._consumer.mainFile;
@@ -161,7 +161,7 @@ export function componentSchema(componentExtension: ComponentMain) {
         },
         logs: async (
           component: Component,
-          filter?: { type?: string; offset?: number; limit?: number; head?: string; sort?: string }
+          filter?: { type?: string; offset?: number; limit?: number; head?: string; sort?: string },
         ) => {
           return (await component.getLogs(filter)).map((log) => ({ ...log, id: log.hash }));
         },

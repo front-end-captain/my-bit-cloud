@@ -1,6 +1,6 @@
-import { NextFunction, Request, Response, Route } from '@teambit/express';
+import { NextFunction, Request, Response, Route } from "@unknown/express";
 
-import { ComponentMain } from './component.main.runtime';
+import { ComponentMain } from "./component.main.runtime";
 
 export type RegisteredComponentRoute = Route & {
   resolveComponent?: boolean;
@@ -11,8 +11,11 @@ export type ComponentUrlParams = {
 };
 
 export class ComponentRoute implements Route {
-  constructor(private registerRoute: RegisteredComponentRoute, private componentExtension: ComponentMain) {}
-  dynamicRouteRegex = '/?[^/@]+/[^~]*';
+  constructor(
+    private registerRoute: RegisteredComponentRoute,
+    private componentExtension: ComponentMain,
+  ) {}
+  dynamicRouteRegex = "/?[^/@]+/[^~]*";
   readonly route = `/:componentId(${this.dynamicRouteRegex})/~aspect${this.registerRoute.route}`;
 
   get componentMiddlewares() {

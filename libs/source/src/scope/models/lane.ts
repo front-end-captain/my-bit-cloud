@@ -1,17 +1,17 @@
-import { v4 } from 'uuid';
-import { isHash } from '@unknown/component-version';
-import { LaneId, DEFAULT_LANE, LANE_REMOTE_DELIMITER } from '@unknown/lane-id';
-import { Scope } from '..';
-import { BitId, BitIds } from '../../bit-id';
-import { CFG_USER_EMAIL_KEY, CFG_USER_NAME_KEY, PREVIOUS_DEFAULT_LANE } from '../../constants';
-import ValidationError from '../../error/validation-error';
-import logger from '../../logger/logger';
-import { filterObject, getStringifyArgs, sha1 } from '../../utils';
-import { hasVersionByRef } from '../component-ops/traverse-versions';
-import { BitObject, Ref, Repository } from '../objects';
-import { Version } from '.';
-import * as globalConfig from '../../api/consumer/lib/global-config';
-import GeneralError from '../../error/general-error';
+import { v4 } from "uuid";
+import { isHash } from "@unknown/component-version";
+import { LaneId, DEFAULT_LANE, LANE_REMOTE_DELIMITER } from "@unknown/lane-id";
+import { Scope } from "..";
+import { BitId, BitIds } from "../../bit-id";
+import { CFG_USER_EMAIL_KEY, CFG_USER_NAME_KEY, PREVIOUS_DEFAULT_LANE } from "../../constants";
+import ValidationError from "../../error/validation-error";
+import logger from "../../logger/logger";
+import { filterObject, getStringifyArgs, sha1 } from "../../utils";
+import { hasVersionByRef } from "../component-ops/traverse-versions";
+import { BitObject, Ref, Repository } from "../objects";
+import { Version } from ".";
+import * as globalConfig from "../../api/consumer/lib/global-config";
+import GeneralError from "../../error/general-error";
 
 export type Log = { date: string; username?: string; email?: string };
 
@@ -38,11 +38,11 @@ export default class Lane extends BitObject {
   isNew = false; // doesn't get saved in the object. only needed for in-memory instance
   constructor(props: LaneProps) {
     super();
-    if (!props.name) throw new TypeError('Lane constructor expects to get a name parameter');
+    if (!props.name) throw new TypeError("Lane constructor expects to get a name parameter");
     this.name = props.name;
     this.scope = props.scope;
     this.components = props.components || [];
-    this.log = props.log || {};
+    this.log = props.log || { date: "" };
     this._hash = props.hash;
     this.readmeComponent = props.readmeComponent;
     this.forkedFrom = props.forkedFrom;
@@ -52,7 +52,7 @@ export default class Lane extends BitObject {
   }
   hash(): Ref {
     if (!this._hash) {
-      throw new Error('hash is missing from a Lane object');
+      throw new Error("hash is missing from a Lane object");
     }
     return new Ref(this._hash);
   }
@@ -80,7 +80,7 @@ export default class Lane extends BitObject {
         },
         forkedFrom: this.forkedFrom && this.forkedFrom.toObject(),
       },
-      (val) => !!val
+      (val) => !!val,
     );
     return obj;
   }
@@ -106,10 +106,15 @@ export default class Lane extends BitObject {
         head: new Ref(component.head),
       })),
       readmeComponent: laneObject.readmeComponent && {
-        id: new BitId({ scope: laneObject.readmeComponent.id.scope, name: laneObject.readmeComponent.id.name }),
+        id: new BitId({
+          scope: laneObject.readmeComponent.id.scope,
+          name: laneObject.readmeComponent.id.name,
+        }),
         head: laneObject.readmeComponent.head && new Ref(laneObject.readmeComponent.head),
       },
-      forkedFrom: laneObject.forkedFrom && LaneId.from(laneObject.forkedFrom.name, laneObject.forkedFrom.scope),
+      forkedFrom:
+        laneObject.forkedFrom &&
+        LaneId.from(laneObject.forkedFrom.name, laneObject.forkedFrom.scope),
       hash: laneObject.hash || hash,
     });
   }
@@ -126,7 +131,9 @@ export default class Lane extends BitObject {
       existsComponent.id = component.id;
       existsComponent.head = component.head;
     } else {
-      logger.debug(`Lane.addComponent, adding component ${component.id.toString()} to lane ${this.id()}`);
+      logger.debug(
+        `Lane.addComponent, adding component ${component.id.toString()} to lane ${this.id()}`,
+      );
       this.components.push(component);
     }
   }
@@ -180,10 +187,15 @@ export default class Lane extends BitObject {
           return;
         }
         const startTraverseFrom = modelComponent.getHead() || null; // it's important to have it as null and not as undefined, see hasVersionByRef
-        const headExist = await hasVersionByRef(modelComponent, component.head, scope.objects, startTraverseFrom);
+        const headExist = await hasVersionByRef(
+          modelComponent,
+          component.head,
+          scope.objects,
+          startTraverseFrom,
+        );
         if (headExist) merged.push(component.id);
         else unmerged.push(component.id);
-      })
+      }),
     );
     return { merged, unmerged };
   }
@@ -199,7 +211,7 @@ export default class Lane extends BitObject {
         const headVersion = (await component.head.load(repo)) as Version;
         const objects = [headVersion, ...headVersion.collect(repo)];
         return { id: component.id, objects };
-      })
+      }),
     );
   }
   validate() {
@@ -207,13 +219,15 @@ export default class Lane extends BitObject {
     // validate that the head
     this.components.forEach((component) => {
       if (this.components.filter((c) => c.id.name === component.id.name).length > 1) {
-        throw new ValidationError(`${message}, the following component is duplicated "${component.id.name}"`);
+        throw new ValidationError(
+          `${message}, the following component is duplicated "${component.id.name}"`,
+        );
       }
       if (!isHash(component.head.hash)) {
         throw new ValidationError(
           `${message}, lane component ${component.id.toStringWithoutVersion()} head should be a hash, got ${
             component.head.hash
-          }`
+          }`,
         );
       }
     });

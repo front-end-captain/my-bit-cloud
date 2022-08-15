@@ -4,7 +4,6 @@ import R from 'ramda';
 import { compact } from 'lodash';
 import { LaneId } from '@unknown/lane-id';
 import semver from 'semver';
-import { Analytics } from '../analytics/analytics';
 import { BitId, BitIds } from '../bit-id';
 import { BitIdStr } from '../bit-id/bit-id';
 import loader from '../cli/loader';
@@ -415,10 +414,6 @@ export default class Scope {
    */
   async removeMany(bitIds: BitIds, force: boolean, consumer?: Consumer): Promise<RemovedObjects> {
     logger.debug(`scope.removeMany ${bitIds.toString()} with force flag: ${force.toString()}`);
-    Analytics.addBreadCrumb(
-      'removeMany',
-      `scope.removeMany ${Analytics.hashData(bitIds)} with force flag: ${force.toString()}`
-    );
     const removeComponents = new RemoveModelComponents(this, bitIds, force, consumer);
     return removeComponents.remove();
   }

@@ -152,6 +152,18 @@
       "projectFolder": "libs/lane-id",
       "tags": ["libs"],
       "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/base-ui.routing.compare-url",
+      "projectFolder": "libs/base-ui.routing.compare-url",
+      "tags": ["libs"],
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@unknown/base-react.navigation.link",
+      "projectFolder": "libs/base-react.navigation.link",
+      "tags": ["libs"],
+      "shouldPublish": false
     }
   ]
 }

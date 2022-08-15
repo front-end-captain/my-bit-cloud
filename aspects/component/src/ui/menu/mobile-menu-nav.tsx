@@ -3,7 +3,7 @@ import { useResolvedPath } from 'react-router-dom';
 import classnames from 'classnames';
 import { Icon } from '@teambit/design.elements.icon';
 import { Dropdown } from '@teambit/design.inputs.dropdown';
-import { useLocation } from '@teambit/base-react.navigation.link';
+import { useLocation } from '@unknown/base-react.navigation.link';
 import { TopBarNav } from '../top-bar-nav';
 import styles from './menu.module.scss';
 import mobileStyles from './mobile-menu-nav.module.scss';

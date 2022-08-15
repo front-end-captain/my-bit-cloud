@@ -1,11 +1,11 @@
-import chalk from 'chalk';
-import http from 'http';
-import open from 'open';
-import os from 'os';
-import url from 'url';
-import { v4 } from 'uuid';
+import chalk from "chalk";
+import http from "http";
+import open from "open";
+import os from "os";
+import url from "url";
+import { v4 } from "uuid";
 
-import { getSync, setSync } from '../../api/consumer/lib/global-config';
+import { getSync, setSync } from "../../api/consumer/lib/global-config";
 import {
   CFG_HUB_LOGIN_KEY,
   CFG_REGISTRY_URL_KEY,
@@ -13,11 +13,11 @@ import {
   DEFAULT_HUB_LOGIN,
   DEFAULT_REGISTRY_URL,
   PREVIOUSLY_DEFAULT_REGISTRY_URL,
-} from '../../constants';
-import GeneralError from '../../error/general-error';
-import logger from '../../logger/logger';
-import { npmLogin } from '../../registry';
-import { LoginFailed } from '../exceptions';
+} from "../../constants";
+import GeneralError from "../../error/general-error";
+import logger from "../../logger/logger";
+import { npmLogin } from "../../registry";
+import { LoginFailed } from "../exceptions";
 
 const ERROR_RESPONSE = 500;
 const DEFAULT_PORT = 8085;
@@ -28,11 +28,12 @@ export default function loginToBitSrc(
   suppressBrowserLaunch: boolean,
   npmrcPath: string,
   skipRegistryConfig: boolean,
-  machineName: string | null | undefined
+  machineName: string | null | undefined,
 ): Promise<{
   isAlreadyLoggedIn?: boolean;
   username?: string;
   npmrcPath?: string;
+  writeToNpmrcError?: boolean;
 }> {
   let actualNpmrcPath = npmrcPath;
   return new Promise((resolve, reject) => {
@@ -48,8 +49,11 @@ export default function loginToBitSrc(
         response.end();
         server.close();
       };
-      if (request.method !== 'GET') {
-        logger.errorAndAddBreadCrumb('login.loginToBitSrc', 'received non get request, closing connection');
+      if (request.method !== "GET") {
+        logger.errorAndAddBreadCrumb(
+          "login.loginToBitSrc",
+          "received non get request, closing connection",
+        );
         closeConnection();
         reject(new LoginFailed());
       }
@@ -63,9 +67,9 @@ export default function loginToBitSrc(
         let writeToNpmrcError = false;
         if (clientGeneratedId !== clientId) {
           logger.errorAndAddBreadCrumb(
-            'login.loginToBitSrc',
-            'clientId mismatch, expecting: {clientGeneratedId} got {clientId}',
-            { clientGeneratedId, clientId }
+            "login.loginToBitSrc",
+            "clientId mismatch, expecting: {clientGeneratedId} got {clientId}",
+            { clientGeneratedId, clientId },
           );
           closeConnection(ERROR_RESPONSE);
           reject(new LoginFailed());
@@ -82,7 +86,11 @@ export default function loginToBitSrc(
               actualNpmrcPath = npmLogin(token, npmrcPath, PREVIOUSLY_DEFAULT_REGISTRY_URL);
             }
             // @ts-ignore AUTO-ADDED-AFTER-MIGRATION-PLEASE-FIX!
-            actualNpmrcPath = npmLogin(token, npmrcPath, configuredRegistry || DEFAULT_REGISTRY_URL);
+            actualNpmrcPath = npmLogin(
+              token as string,
+              npmrcPath,
+              configuredRegistry || DEFAULT_REGISTRY_URL,
+            );
           } catch (e: any) {
             actualNpmrcPath = e.path;
             writeToNpmrcError = true;
@@ -94,9 +102,8 @@ export default function loginToBitSrc(
         });
         closeConnection();
         resolve({
-          username,
+          username: username as string,
           npmrcPath: actualNpmrcPath,
-          // @ts-ignore AUTO-ADDED-AFTER-MIGRATION-PLEASE-FIX!
           writeToNpmrcError,
         });
       } catch (err: any) {
@@ -106,20 +113,23 @@ export default function loginToBitSrc(
       }
     });
 
-    logger.debugAndAddBreadCrumb('login.loginToBitSrc', `initializing login server on port: ${port || DEFAULT_PORT}`);
+    logger.debugAndAddBreadCrumb(
+      "login.loginToBitSrc",
+      `initializing login server on port: ${port || DEFAULT_PORT}`,
+    );
     // @ts-ignore
     server.listen(port || DEFAULT_PORT, (err: Error) => {
       if (err) {
-        logger.errorAndAddBreadCrumb('login.loginToBitSrc', 'something bad happened', {}, err);
+        logger.errorAndAddBreadCrumb("login.loginToBitSrc", "something bad happened", {}, err);
         reject(new LoginFailed());
       }
 
       const encoded = encodeURI(
         `${getSync(CFG_HUB_LOGIN_KEY) || DEFAULT_HUB_LOGIN}?port=${
           port || DEFAULT_PORT
-        }&clientId=${clientGeneratedId}&responseType=token&deviceName=${machineName || os.hostname()}&os=${
-          process.platform
-        }`
+        }&clientId=${clientGeneratedId}&responseType=token&deviceName=${
+          machineName || os.hostname()
+        }&os=${process.platform}`,
       );
       if (!suppressBrowserLaunch) {
         console.log(chalk.yellow(`Your browser has been opened to visit:\n${encoded}`)); // eslint-disable-line no-console
@@ -130,11 +140,15 @@ export default function loginToBitSrc(
       }
     });
 
-    server.on('error', (e) => {
+    server.on("error", (e) => {
       // @ts-ignore
-      if (e.code === 'EADDRINUSE') {
+      if (e.code === "EADDRINUSE") {
         // @ts-ignore
-        reject(new GeneralError(`port: ${e.port} already in use, please run bit login --port <port>`));
+        reject(
+          new GeneralError(
+            `port: ${(e as any).port} already in use, please run bit login --port <port>`,
+          ),
+        );
       }
       reject(e);
     });

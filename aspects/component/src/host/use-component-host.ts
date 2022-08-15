@@ -1,4 +1,4 @@
-import { useDataQuery } from "@teambit/ui-foundation.ui.hooks.use-data-query";
+import { useDataQuery } from "@unknown/ui-foundation.uis";
 import { gql } from "@apollo/client";
 
 import { ComponentHostModel } from "./component-host-model";

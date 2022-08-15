@@ -2,9 +2,9 @@ import {
   ExtensionDataList,
   ExtensionDataEntry,
   removeInternalConfigFields,
-} from '@teambit/legacy/dist/consumer/config/extension-data';
-import { ComponentID } from '@unknown/component-id';
-import { AspectEntry, SerializableMap } from './aspect-entry';
+} from "@unknown/source/dist/consumer/config/extension-data";
+import { ComponentID } from "@unknown/component-id";
+import { AspectEntry, SerializableMap } from "./aspect-entry";
 
 /**
  * list of aspects, each may have data and artifacts saved per component.
@@ -13,7 +13,13 @@ export class AspectList {
   constructor(readonly entries: AspectEntry[]) {}
 
   addEntry(aspectId: ComponentID, data: SerializableMap = {}) {
-    const extensionDataEntry = new ExtensionDataEntry(undefined, aspectId._legacy, undefined, {}, data);
+    const extensionDataEntry = new ExtensionDataEntry(
+      undefined,
+      aspectId._legacy,
+      undefined,
+      {},
+      data,
+    );
     const entry = new AspectEntry(aspectId, extensionDataEntry);
     this.entries.push(entry);
     return entry;
@@ -119,5 +125,5 @@ export class AspectList {
 function getAspectId(entry: ExtensionDataEntry, scope?: string) {
   if (!entry.extensionId && entry.name) return ComponentID.fromString(entry.name);
   if (entry.extensionId) return ComponentID.fromLegacy(entry.extensionId, scope);
-  throw new Error('aspect cannot be loaded without setting an ID');
+  throw new Error("aspect cannot be loaded without setting an ID");
 }

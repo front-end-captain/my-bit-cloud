@@ -1,7 +1,7 @@
 import { AspectBox } from '@teambit/harmony.ui.aspect-box';
 import { ComponentContext } from '../index';
 import React, { useContext } from 'react';
-import { useDataQuery } from '@teambit/ui-foundation.ui.hooks.use-data-query';
+import { useDataQuery } from '@unknown/ui-foundation.uis';
 import { gql } from '@apollo/client';
 import { EmptyBox } from '@teambit/design.ui.empty-box';
 import { H1 } from '@teambit/documenter.ui.heading';

@@ -74,6 +74,10 @@ module.exports = function buildConfig(type) {
         settings: settings,
         rules: {
           "@typescript-eslint/ban-ts-comment": "off",
+          "@typescript-eslint/no-empty-function": "warn",
+          "@typescript-eslint/ban-types": "warn",
+          "@typescript-eslint/no-var-requires": "warn",
+          // "import/no-dynamic-require": "warn"
         },
       },
     ],

@@ -1,45 +1,45 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import fs from 'fs-extra';
-import * as path from 'path';
-import R from 'ramda';
-import { IssuesList } from '@unknown/component-issue';
-import BitId from '../../bit-id/bit-id';
-import BitIds from '../../bit-id/bit-ids';
+import fs from "fs-extra";
+import * as path from "path";
+import R from "ramda";
+import { IssuesList } from "@unknown/component-issue";
+import BitId from "../../bit-id/bit-id";
+import BitIds from "../../bit-id/bit-ids";
 import {
   BASE_WEB_DOMAIN,
   BIT_WORKSPACE_TMP_DIRNAME,
   BuildStatus,
   DEFAULT_BINDINGS_PREFIX,
   DEFAULT_LANGUAGE,
-} from '../../constants';
-import GeneralError from '../../error/general-error';
-import docsParser from '../../jsdoc/parser';
-import { Doclet } from '../../jsdoc/types';
-import logger from '../../logger/logger';
-import ComponentWithDependencies from '../../scope/component-dependencies';
-import { ScopeListItem } from '../../scope/models/model-component';
-import Version, { Log } from '../../scope/models/version';
-import { pathNormalizeToLinux } from '../../utils';
-import { PathLinux, PathOsBased, PathOsBasedAbsolute, PathOsBasedRelative } from '../../utils/path';
-import ComponentMap, { ComponentOrigin } from '../bit-map/component-map';
-import { IgnoredDirectory } from '../component-ops/add-components/exceptions/ignored-directory';
-import ComponentsPendingImport from '../component-ops/exceptions/components-pending-import';
-import { Dist, License, SourceFile } from '../component/sources';
-import ComponentConfig, { ILegacyWorkspaceConfig } from '../config';
-import ComponentOverrides from '../config/component-overrides';
-import { ExtensionDataList } from '../config/extension-data';
-import Consumer from '../consumer';
-import ComponentOutOfSync from '../exceptions/component-out-of-sync';
-import { ComponentFsCache } from './component-fs-cache';
-import { CURRENT_SCHEMA, isSchemaSupport, SchemaFeature, SchemaName } from './component-schema';
-import { Dependencies, Dependency } from './dependencies';
-import { ManuallyChangedDependencies } from './dependencies/dependency-resolver/overrides-dependencies';
-import ComponentNotFoundInPath from './exceptions/component-not-found-in-path';
-import MainFileRemoved from './exceptions/main-file-removed';
-import MissingFilesFromComponent from './exceptions/missing-files-from-component';
-import { NoComponentDir } from './exceptions/no-component-dir';
-import PackageJsonFile from './package-json-file';
-import DataToPersist from './sources/data-to-persist';
+} from "../../constants";
+import GeneralError from "../../error/general-error";
+import docsParser from "../../jsdoc/parser";
+import { Doclet } from "../../jsdoc/types";
+import logger from "../../logger/logger";
+import ComponentWithDependencies from "../../scope/component-dependencies";
+import { ScopeListItem } from "../../scope/models/model-component";
+import Version, { Log } from "../../scope/models/version";
+import { pathNormalizeToLinux } from "../../utils";
+import { PathLinux, PathOsBased, PathOsBasedAbsolute, PathOsBasedRelative } from "../../utils/path";
+import ComponentMap, { ComponentOrigin } from "../bit-map/component-map";
+import { IgnoredDirectory } from "../component-ops/add-components/exceptions/ignored-directory";
+import ComponentsPendingImport from "../component-ops/exceptions/components-pending-import";
+import { Dist, License, SourceFile } from "../component/sources";
+import ComponentConfig, { ILegacyWorkspaceConfig } from "../config";
+import ComponentOverrides from "../config/component-overrides";
+import { ExtensionDataList } from "../config/extension-data";
+import Consumer from "../consumer";
+import ComponentOutOfSync from "../exceptions/component-out-of-sync";
+import { ComponentFsCache } from "./component-fs-cache";
+import { CURRENT_SCHEMA, isSchemaSupport, SchemaFeature, SchemaName } from "./component-schema";
+import { Dependencies, Dependency } from "./dependencies";
+import { ManuallyChangedDependencies } from "./dependencies/dependency-resolver/overrides-dependencies";
+import ComponentNotFoundInPath from "./exceptions/component-not-found-in-path";
+import MainFileRemoved from "./exceptions/main-file-removed";
+import MissingFilesFromComponent from "./exceptions/missing-files-from-component";
+import { NoComponentDir } from "./exceptions/no-component-dir";
+import PackageJsonFile from "./package-json-file";
+import DataToPersist from "./sources/data-to-persist";
 
 export type CustomResolvedPath = { destinationPath: PathLinux; importSource: string };
 
@@ -200,7 +200,7 @@ export default class Component {
     this.deprecated = deprecated || false;
     this.origin = origin;
     this.scopesList = scopesList;
-    this.extensions = extensions || [];
+    this.extensions = extensions || ([] as ExtensionDataList);
     this.componentFromModel = componentFromModel;
     this.schema = schema;
     this.buildStatus = buildStatus;
@@ -208,10 +208,12 @@ export default class Component {
   }
 
   validateComponent() {
-    const nonEmptyFields = ['name', 'mainFile'];
+    const nonEmptyFields = ["name", "mainFile"];
     nonEmptyFields.forEach((field) => {
       if (!this[field]) {
-        throw new GeneralError(`failed loading a component ${this.id}, the field "${field}" can't be empty`);
+        throw new GeneralError(
+          `failed loading a component ${this.id}, the field "${field}" can't be empty`,
+        );
       }
     });
   }
@@ -230,7 +232,7 @@ export default class Component {
     return newInstance;
   }
 
-  getTmpFolder(workspacePrefix: PathOsBased = ''): PathOsBased {
+  getTmpFolder(workspacePrefix: PathOsBased = ""): PathOsBased {
     let folder = path.join(workspacePrefix, BIT_WORKSPACE_TMP_DIRNAME, this.id.name);
     if (this.componentMap) {
       const componentDir = this.componentMap.getComponentDir();
@@ -253,13 +255,15 @@ export default class Component {
     switch (this.lang) {
       case DEFAULT_LANGUAGE:
       default:
-        return 'js';
+        return "js";
     }
   }
 
   _getHomepage() {
     // TODO: Validate somehow that this scope is really on bitsrc (maybe check if it contains . ?)
-    const homepage = this.scope ? `https://${BASE_WEB_DOMAIN}/${this.scope.replace('.', '/')}/${this.name}` : undefined;
+    const homepage = this.scope
+      ? `https://${BASE_WEB_DOMAIN}/${this.scope.replace(".", "/")}/${this.name}`
+      : undefined;
     return homepage;
   }
 
@@ -293,7 +297,11 @@ export default class Component {
     return BitIds.fromArray(allDependencies);
   }
 
-  get depsIdsGroupedByType(): { dependencies: BitIds; devDependencies: BitIds; extensionDependencies: BitIds } {
+  get depsIdsGroupedByType(): {
+    dependencies: BitIds;
+    devDependencies: BitIds;
+    extensionDependencies: BitIds;
+  } {
     return {
       dependencies: this.dependencies.getAllIds(),
       devDependencies: this.devDependencies.getAllIds(),
@@ -393,11 +401,11 @@ export default class Component {
           // when dependencies are imported as npm packages, they are not in bit.map
           this.dependenciesSavedAsComponents = false;
           return consumer.loadComponentFromModel(dependencyId);
-        })
+        }),
       );
     };
 
-    const dependencies = await getDependenciesComponents(getFlatten('flattenedDependencies'));
+    const dependencies = await getDependenciesComponents(getFlatten("flattenedDependencies"));
     return new ComponentWithDependencies({
       component: this,
       dependencies,
@@ -408,7 +416,8 @@ export default class Component {
 
   copyAllDependenciesFromModel() {
     const componentFromModel = this.componentFromModel;
-    if (!componentFromModel) throw new Error('copyDependenciesFromModel: component is missing from the model');
+    if (!componentFromModel)
+      throw new Error("copyDependenciesFromModel: component is missing from the model");
     this.setDependencies(componentFromModel.dependencies.get());
     this.setDevDependencies(componentFromModel.devDependencies.get());
   }
@@ -504,7 +513,9 @@ export default class Component {
     const workspaceConfig: ILegacyWorkspaceConfig = consumer.config;
     const componentFromModel = await consumer.loadComponentFromModelIfExist(id);
     if (!componentFromModel && id.scope) {
-      const inScopeWithAnyVersion = await consumer.scope.getModelComponentIfExist(id.changeVersion(undefined));
+      const inScopeWithAnyVersion = await consumer.scope.getModelComponentIfExist(
+        id.changeVersion(undefined),
+      );
       // if it's in scope with another version, the component will be synced in _handleOutOfSyncScenarios()
       if (!inScopeWithAnyVersion) throw new ComponentsPendingImport();
     }
@@ -535,19 +546,24 @@ export default class Component {
 
     // TODO: change this once we want to support change export by changing the default scope
     // TODO: when we do this, we need to think how we distinct if this is the purpose of the user, or he just didn't changed it
-    const bindingPrefix = componentFromModel?.bindingPrefix || componentConfig.bindingPrefix || DEFAULT_BINDINGS_PREFIX;
+    const bindingPrefix =
+      componentFromModel?.bindingPrefix || componentConfig.bindingPrefix || DEFAULT_BINDINGS_PREFIX;
 
-    const overridesFromModel = componentFromModel ? componentFromModel.overrides.componentOverridesData : undefined;
+    const overridesFromModel = componentFromModel
+      ? componentFromModel.overrides.componentOverridesData
+      : undefined;
     const overrides = await ComponentOverrides.loadFromConsumer(
       id,
       workspaceConfig,
       overridesFromModel,
       componentConfig,
       componentMap.origin,
-      consumer.isLegacy
+      consumer.isLegacy,
     );
     const packageJsonFile = (componentConfig && componentConfig.packageJsonFile) || undefined;
-    const packageJsonChangedProps = componentFromModel ? componentFromModel.packageJsonChangedProps : undefined;
+    const packageJsonChangedProps = componentFromModel
+      ? componentFromModel.packageJsonChangedProps
+      : undefined;
     const files = await getLoadedFilesHarmony(consumer, componentMap, id, bitDir);
     const docsP = _getDocsForFiles(files, consumer.componentFsCache);
     const docs = await Promise.all(docsP);
@@ -589,7 +605,7 @@ async function getLoadedFilesHarmony(
   consumer: Consumer,
   componentMap: ComponentMap,
   id: BitId,
-  bitDir: string
+  bitDir: string,
 ): Promise<SourceFile[]> {
   if (componentMap.noFilesError) {
     throw componentMap.noFilesError;
@@ -609,6 +625,11 @@ async function getLoadedFilesHarmony(
   return sourceFiles;
 }
 
-function _getDocsForFiles(files: SourceFile[], componentFsCache: ComponentFsCache): Array<Promise<Doclet[]>> {
-  return files.map((file) => (file.test ? Promise.resolve([]) : docsParser(file, componentFsCache)));
+function _getDocsForFiles(
+  files: SourceFile[],
+  componentFsCache: ComponentFsCache,
+): Array<Promise<Doclet[]>> {
+  return files.map((file) =>
+    file.test ? Promise.resolve([]) : docsParser(file, componentFsCache),
+  );
 }

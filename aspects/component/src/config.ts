@@ -1,8 +1,6 @@
-import { ComponentOverridesData } from '@teambit/legacy/dist/consumer/config/component-overrides';
-import { ExtensionDataList } from '@teambit/legacy/dist/consumer/config/extension-data';
-import { PathLinux } from '@teambit/legacy/dist/utils/path';
-// import { CustomResolvedPath } from '@teambit/legacy/dist/consumer/component/consumer-component';
-// import { ComponentOverridesData } from '@teambit/legacy/dist/consumer/config/component-overrides';
+import { ComponentOverridesData } from "@unknown/source/dist/consumer/config/component-overrides";
+import { ExtensionDataList } from "@unknown/source/dist/consumer/config/extension-data";
+import { PathLinux } from "@unknown/source/dist/utils/path";
 
 type LegacyConfigProps = {
   lang?: string;
@@ -26,6 +24,6 @@ export default class Config {
      */
     readonly extensions: ExtensionDataList,
 
-    readonly legacyProperties?: LegacyConfigProps
+    readonly legacyProperties?: LegacyConfigProps,
   ) {}
 }

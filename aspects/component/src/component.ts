@@ -1,21 +1,21 @@
-import { AnyFS } from '@teambit/any-fs';
-import { capitalize } from '@teambit/toolbox.string.capitalize';
-import { SemVer } from 'semver';
-import { ComponentID } from '@teambit/component-id';
-import { BitError } from '@unknown/bit-error';
-import { BuildStatus } from '@teambit/legacy/dist/constants';
+import { AnyFS } from "@teambit/any-fs";
+import { capitalize } from "@teambit/toolbox.string.capitalize";
+import { SemVer } from "semver";
+import { ComponentID } from "@unknown/component-id";
+import { BitError } from "@unknown/bit-error";
+import { BuildStatus } from "@unknown/source/dist/constants";
 
-import { slice } from 'lodash';
-import { ComponentFactory } from './component-factory';
-import ComponentFS from './component-fs';
+import { slice } from "lodash";
+import { ComponentFactory } from "./component-factory";
+import ComponentFS from "./component-fs";
 // import { NothingToSnap } from './exceptions';
-import ComponentConfig from './config';
-import { Snap } from './snap';
-import { State } from './state';
-import { TagMap } from './tag-map';
-import { Tag } from './tag';
-import { CouldNotFindLatest } from './exceptions';
-import { IComponent, RawComponentMetadata } from './component-interface';
+import ComponentConfig from "./config";
+import { Snap } from "./snap";
+import { State } from "./state";
+import { TagMap } from "./tag-map";
+import { Tag } from "./tag";
+import { CouldNotFindLatest } from "./exceptions";
+import { IComponent, RawComponentMetadata } from "./component-interface";
 // import { Author } from './types';
 
 type SnapsIterableOpts = {
@@ -53,7 +53,7 @@ export class Component implements IComponent {
     /**
      * the component factory
      */
-    private factory: ComponentFactory
+    private factory: ComponentFactory,
   ) {}
 
   get mainFile() {
@@ -113,7 +113,13 @@ export class Component implements IComponent {
     return this.state.aspects.get(id)?.serialize();
   }
 
-  async getLogs(filter?: { type?: string; offset?: number; limit?: number; head?: string; sort?: string }) {
+  async getLogs(filter?: {
+    type?: string;
+    offset?: number;
+    limit?: number;
+    head?: string;
+    sort?: string;
+  }) {
     const allLogs = await this.factory.getLogs(this.id, false, filter?.head);
 
     if (!filter) return allLogs;
@@ -121,8 +127,8 @@ export class Component implements IComponent {
     const { type, limit, offset, sort } = filter;
 
     const typeFilter = (snap) => {
-      if (type === 'tag') return snap.tag;
-      if (type === 'snap') return !snap.tag;
+      if (type === "tag") return snap.tag;
+      if (type === "snap") return !snap.tag;
       return true;
     };
 
@@ -131,7 +137,7 @@ export class Component implements IComponent {
       filteredLogs = slice(filteredLogs, offset, limit + (offset || 0));
     }
 
-    if (sort && sort === 'asc') return filteredLogs;
+    if (sort && sort === "asc") return filteredLogs;
 
     return filteredLogs.reverse();
   }
@@ -157,8 +163,8 @@ export class Component implements IComponent {
    * display name of the component.
    */
   get displayName() {
-    const tokens = this.id.name.split('-').map((token) => capitalize(token));
-    return tokens.join(' ');
+    const tokens = this.id.name.split("-").map((token) => capitalize(token));
+    return tokens.join(" ");
   }
 
   /**
@@ -204,7 +210,7 @@ export class Component implements IComponent {
   loadSnap(snapId?: string): Promise<Snap> {
     const snapToGet = snapId || this.head?.hash;
     if (!snapToGet) {
-      throw new BitError('could not load snap for new components');
+      throw new BitError("could not load snap for new components");
     }
     return this.factory.getSnap(this.id, snapToGet);
   }

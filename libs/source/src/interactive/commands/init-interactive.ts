@@ -1,13 +1,13 @@
-import chalk from 'chalk';
-import inquirer from 'inquirer';
-import format from 'string-format';
+import chalk from "chalk";
+import inquirer from "inquirer";
+import format from "string-format";
 
-import { init, listScope } from '../../api/consumer';
-import logger from '../../logger/logger';
+import { init, listScope } from "../../api/consumer";
+import logger from "../../logger/logger";
 
-inquirer.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'));
+inquirer.registerPrompt("fuzzypath", require("inquirer-fuzzy-path"));
 
-type ENVS_TYPE = 'compiler' | 'tester';
+type ENVS_TYPE = "compiler" | "tester";
 
 export const TOP_MESSAGE = `This utility initialize an empty Bit workspace and walks you through creating a bit configuration.
 You can later edit your configuration in your package.json or bit.json.
@@ -15,24 +15,27 @@ Press ^C at any time to quit.
 
 After setting up the workspace, use 'bit add' to track components and modules.`;
 
-export const PACKAGE_MANAGER_MSG_Q = 'Which package manager would you like to use for installing components?';
-export const DEFAULT_DIR_MSG_Q = 'Where would you like to store imported components?';
-export const CHOOSE_ENV_MSG_TEMPLATE_Q = 'Which {type} would you like to use for the components?';
+export const PACKAGE_MANAGER_MSG_Q =
+  "Which package manager would you like to use for installing components?";
+export const DEFAULT_DIR_MSG_Q = "Where would you like to store imported components?";
+export const CHOOSE_ENV_MSG_TEMPLATE_Q = "Which {type} would you like to use for the components?";
 export const CHOOSE_CUSTOM_ENV_MSG_TEMPLATE_Q =
   'Paste the "bit import" command for the {type} (press "enter" to skip).';
-export const CHOOSE_COMPILER_MSG_Q = format(CHOOSE_ENV_MSG_TEMPLATE_Q, { type: 'compiler' });
+export const CHOOSE_COMPILER_MSG_Q = format(CHOOSE_ENV_MSG_TEMPLATE_Q, { type: "compiler" });
 // export const CHOOSE_TESTER_MSG_Q = format(CHOOSE_ENV_MSG_TEMPLATE_Q, { type: 'tester' });
-export const CHOOSE_CUSTOM_COMPILER_MSG_Q = format(CHOOSE_CUSTOM_ENV_MSG_TEMPLATE_Q, { type: 'compiler' });
-const SKIP_DEFINE_ENV_TEMPLATE_ANS = 'no {type}';
-const SKIP_DEFINE_COMPILER_ANS = format(SKIP_DEFINE_ENV_TEMPLATE_ANS, { type: 'compiler' });
+export const CHOOSE_CUSTOM_COMPILER_MSG_Q = format(CHOOSE_CUSTOM_ENV_MSG_TEMPLATE_Q, {
+  type: "compiler",
+});
+const SKIP_DEFINE_ENV_TEMPLATE_ANS = "no {type}";
+const SKIP_DEFINE_COMPILER_ANS = format(SKIP_DEFINE_ENV_TEMPLATE_ANS, { type: "compiler" });
 // const SKIP_DEFINE_TESTER_ANS = format(SKIP_DEFINE_ENV_TEMPLATE_ANS, { type: 'tester' });
-const CUSTOM_ENV_TEMPLATE_ANS = 'I have my own {type}';
-const CUSTOM_COMPILER_ANS = format(CUSTOM_ENV_TEMPLATE_ANS, { type: 'compiler' });
+const CUSTOM_ENV_TEMPLATE_ANS = "I have my own {type}";
+const CUSTOM_COMPILER_ANS = format(CUSTOM_ENV_TEMPLATE_ANS, { type: "compiler" });
 // const CUSTOM_TESTER_ANS = format(CUSTOM_ENV_TEMPLATE_ANS, { type: 'tester' });
-const SKIP_CUSTOM_ENV_KEYWORD = 'skip';
-const BIT_ENVS_SCOPE_NAME = 'bit.envs';
-const CUSTOM_COMPILER_PROP_NAME = 'custom-compiler';
-const DEFAULT_LOCATION_DIR = 'components';
+const SKIP_CUSTOM_ENV_KEYWORD = "skip";
+const BIT_ENVS_SCOPE_NAME = "bit.envs";
+const CUSTOM_COMPILER_PROP_NAME = "custom-compiler";
+const DEFAULT_LOCATION_DIR = "components";
 const DEFAULT_LOCATION_NOTE = "(bit's default location)";
 const DEFAULT_LOCATION_ANS = `${DEFAULT_LOCATION_DIR} ${DEFAULT_LOCATION_NOTE}`;
 
@@ -41,7 +44,7 @@ function _generateChooseEnvQ(
   propName: string,
   message: string,
   skipAnsTxt: string,
-  customEnvAnsTxt: string
+  customEnvAnsTxt: string,
 ) {
   let components: string[] = [];
   // Fetch the components from the remote. If there was an error or no components returned we will skip the question.
@@ -51,7 +54,7 @@ function _generateChooseEnvQ(
       components = await _fetchEnvs(envType);
       if (!components || !components.length) {
         // eslint-disable-next-line no-console
-        console.log(chalk.yellow('no components found. skipping question'));
+        console.log(chalk.yellow("no components found. skipping question"));
         return false;
       }
       return true;
@@ -79,7 +82,7 @@ function _generateChooseEnvQ(
   };
 
   const selectEnv = {
-    type: 'list',
+    type: "list",
     name: propName,
     message,
     when: whenWithFetch,
@@ -94,13 +97,13 @@ function _generateChooseCustomEnvQ(
   propName: string,
   message: string,
   propToCheck: string,
-  valToCheck: string
+  valToCheck: string,
 ) {
   const when = (answers) => {
     return answers[propToCheck] === valToCheck;
   };
   const customEnv = {
-    type: 'input',
+    type: "input",
     name: propName,
     message,
     when,
@@ -110,25 +113,25 @@ function _generateChooseCustomEnvQ(
 }
 
 async function _fetchEnvs(envType: ENVS_TYPE) {
-  if (envType === 'compiler') {
+  if (envType === "compiler") {
     return _fetchCompilers();
   }
   return _fetchTesters();
 }
 
 async function _fetchCompilers() {
-  return _fetchComps(BIT_ENVS_SCOPE_NAME, ['compilers', 'bundlers']);
+  return _fetchComps(BIT_ENVS_SCOPE_NAME, ["compilers", "bundlers"]);
 }
 
 async function _fetchTesters() {
-  return _fetchComps(BIT_ENVS_SCOPE_NAME, ['testers']);
+  return _fetchComps(BIT_ENVS_SCOPE_NAME, ["testers"]);
 }
 
 async function _fetchComps(scopeName: string, namespaces: string[] = []) {
   // Filter the namespace on the remote
-  const namespacesUsingWildcards = namespaces.length ? `${namespaces.join('|')}/*` : undefined;
+  const namespacesUsingWildcards = namespaces.length ? `${namespaces.join("|")}/*` : undefined;
   // Not using user/pass strategy since it will interrupt the flow
-  const strategiesNames = ['token', 'ssh-agent', 'ssh-key'];
+  const strategiesNames = ["token", "ssh-agent", "ssh-key"];
 
   const listScopeResults = await listScope({
     scopeName,
@@ -144,28 +147,32 @@ async function _fetchComps(scopeName: string, namespaces: string[] = []) {
 
 async function _buildQuestions() {
   const packageManagerQ = {
-    type: 'list',
-    name: 'packageManager',
+    type: "list",
+    name: "packageManager",
     message: PACKAGE_MANAGER_MSG_Q,
-    choices: ['npm', 'yarn'],
+    choices: ["npm", "yarn"],
   };
 
   // TODO: 1. the suggestOnly is the opposite, this is a bug in https://github.com/mokkabonna/inquirer-autocomplete-prompt/blob/master/index.js
   // TODO: 2. add option for the default ./components add support for adding extra values in (https://github.com/adelsz/inquirer-fuzzy-path)
   const componentsDirQ = {
-    type: 'fuzzypath',
-    name: 'componentsDefaultDirectory',
+    type: "fuzzypath",
+    name: "componentsDefaultDirectory",
     excludePath: (nodePath) => {
-      return nodePath.startsWith('node_modules') || nodePath.startsWith('.bit') || nodePath.startsWith('.git');
+      return (
+        nodePath.startsWith("node_modules") ||
+        nodePath.startsWith(".bit") ||
+        nodePath.startsWith(".git")
+      );
     },
     // excludePath :: (String) -> Bool
     // excludePath to exclude some paths from the file-system scan
-    itemType: 'directory',
+    itemType: "directory",
     // itemType :: 'any' | 'directory' | 'file'
     // specify the type of nodes to display
     // default value: 'any'
     // example: itemType: 'file' - hides directories from the item list
-    rootPath: '.',
+    rootPath: ".",
     // rootPath :: String
     // Root search directory
     message: DEFAULT_DIR_MSG_Q,
@@ -176,18 +183,18 @@ async function _buildQuestions() {
   };
 
   const chooseCompilerQ = _generateChooseEnvQ(
-    'compiler',
-    'compiler',
+    "compiler",
+    "compiler",
     CHOOSE_COMPILER_MSG_Q,
     SKIP_DEFINE_COMPILER_ANS,
-    CUSTOM_COMPILER_ANS
+    CUSTOM_COMPILER_ANS,
   );
   const chooseCustomCompilerQ = _generateChooseCustomEnvQ(
-    'compiler',
+    "compiler",
     CUSTOM_COMPILER_PROP_NAME,
     CHOOSE_CUSTOM_COMPILER_MSG_Q,
-    'compiler',
-    CUSTOM_COMPILER_ANS
+    "compiler",
+    CUSTOM_COMPILER_ANS,
   );
 
   return [packageManagerQ, componentsDirQ, chooseCompilerQ, chooseCustomCompilerQ];
@@ -207,9 +214,9 @@ export default (async function initInteractive() {
   let actualCompiler = answers.compiler;
   if (actualCompiler === CUSTOM_COMPILER_ANS) {
     actualCompiler = answers[CUSTOM_COMPILER_PROP_NAME];
-    if (actualCompiler.startsWith('bit import')) {
+    if (actualCompiler.startsWith("bit import")) {
       // remove bit import copied from the bit.dev
-      actualCompiler = actualCompiler.replace('bit import ', '');
+      actualCompiler = actualCompiler.replace("bit import ", "");
     }
     if (actualCompiler.toLowerCase() === SKIP_CUSTOM_ENV_KEYWORD) {
       actualCompiler = undefined;
@@ -227,6 +234,6 @@ export default (async function initInteractive() {
         reset: false,
         resetHard: false,
       };
-    }
+    },
   );
 });

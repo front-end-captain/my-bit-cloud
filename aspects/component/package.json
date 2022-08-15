@@ -17,6 +17,9 @@
     "@unknown/express": "workspace:*",
     "@unknown/component-issue": "workspace:*",
     "@unknown/ui-foundation.uis": "workspace:*",
+    "@unknown/source": "workspace:*",
+    "@unknown/bit-error": "workspace:*",
+    "@unknown/base-react.navigation.link": "workspace:*",
     "@teambit/any-fs": "0.0.5",
     "graphql-tag": "2.12.1",
     "@apollo/client": "3.3.7",
@@ -26,7 +29,9 @@
     "semver": "7.3.4",
     "copy-to-clipboard": "3.3.1",
     "classnames": "2.2.6",
-    "react-router-dom": "6.3.0"
+    "react-router-dom": "6.3.0",
+    "inquirer-fuzzy-path": "2.3.0",
+    "lodash.flatten": "4.4.0"
   },
   "devDependencies": {
     "react": "17.0.2",

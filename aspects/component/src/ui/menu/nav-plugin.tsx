@@ -1,5 +1,5 @@
 import { SlotRegistry } from '@teambit/harmony';
-import type { LinkProps } from '@teambit/base-react.navigation.link';
+import type { LinkProps } from '@unknown/base-react.navigation.link';
 import type { ConsumeMethod } from '@teambit/ui-foundation.ui.use-box.menu';
 import { LaneModel } from '@teambit/lanes.ui.lanes';
 import { ComponentModel } from '../../ui';

@@ -6,9 +6,8 @@ import HttpAgent from "agentkeepalive";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import { SocksProxyAgent } from "socks-proxy-agent";
 import { HttpProxyAgent } from "http-proxy-agent";
-import { getAgent, AgentOptions } from "@teambit/toolbox.network.agent";
+import { getAgent, AgentOptions } from "@unknown/network";
 import { Network } from "../network";
-import { getHarmonyVersion } from "../../../bootstrap";
 import { BitId, BitIds } from "../../../bit-id";
 import Component from "../../../consumer/component";
 import { ListScopeResult } from "../../../consumer/component/components-list";
@@ -172,6 +171,7 @@ export class Http implements Network {
     return Http.getToken();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   close(): void {}
 
   async describeScope(): Promise<ScopeDescriptor> {

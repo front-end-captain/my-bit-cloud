@@ -3,7 +3,7 @@ import flatten from "lodash.flatten";
 import copy from "copy-to-clipboard";
 import type { RouteProps } from "react-router-dom";
 
-import type { LinkProps } from "@teambit/base-react.navigation.link";
+import type { LinkProps } from "@unknown/base-react.navigation.link";
 import CommandBarAspect, { CommandBarUI, CommandEntry } from "@teambit/command-bar";
 import { DeprecationIcon } from "@teambit/component.ui.deprecation-icon";
 import { Slot, SlotRegistry } from "@teambit/harmony";
@@ -13,8 +13,8 @@ import ReactRouterAspect, { ReactRouterUI } from "@teambit/react-router";
 import { UIRuntime } from "@teambit/ui";
 import { isBrowser } from "@teambit/ui-foundation.ui.is-browser";
 import { MenuItem, MenuItemSlot } from "@teambit/ui-foundation.ui.main-dropdown";
-import { NavigationSlot, RouteSlot } from "@teambit/ui-foundation.ui.react-router.slot-router";
 import { Import } from "@teambit/ui-foundation.ui.use-box.menu";
+import { NavigationSlot, RouteSlot } from '@unknown/ui-foundation.uis'
 
 import { AspectSection } from "./aspect.section";
 import { ComponentAspect } from "./component.aspect";
