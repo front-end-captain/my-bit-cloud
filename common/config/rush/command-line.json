@@ -16,6 +16,14 @@
       "commandKind": "bulk",
       "ignoreMissingScript": true,
       "allowWarningsInSuccessfulBuild": true
+    },
+    {
+      "name": "lint",
+      "summary": "",
+      "enableParallelism": true,
+      "commandKind": "bulk",
+      "ignoreMissingScript": true,
+      "allowWarningsInSuccessfulBuild": true
     }
   ],
   "parameters": []

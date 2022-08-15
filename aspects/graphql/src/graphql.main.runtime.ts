@@ -39,7 +39,7 @@ export type GraphQLServerOptions = {
   graphiql?: boolean;
   remoteSchemas?: GraphQLServer[];
   subscriptionsPortRange?: number[];
-  onWsConnect?: Function;
+  onWsConnect?: () => void;
 };
 
 export class GraphqlMain {
@@ -110,7 +110,6 @@ export class GraphqlMain {
     // TODO: @guy please consider to refactor to express extension.
     const app = options.app || express();
     app.use(
-      // @ts-ignore todo: it's not clear what's the issue.
       cors({
         origin(origin, callback) {
           callback(null, true);
@@ -128,10 +127,10 @@ export class GraphqlMain {
           console.error("graphql error ", err);
           return Object.assign(err, {
             ERR_CODE:
-              // @ts-ignore
-              err?.originalError?.errors?.[0].ERR_CODE || err.originalError?.constructor?.name,
-            // @ts-ignore
-            HTTP_CODE: err?.originalError?.errors?.[0].HTTP_CODE || err.originalError?.code,
+              (err?.originalError as any)?.errors?.[0].ERR_CODE ||
+              err.originalError?.constructor?.name,
+            HTTP_CODE:
+              (err?.originalError as any)?.errors?.[0].HTTP_CODE || (err.originalError as any)?.code,
           });
         },
         schema,
@@ -284,7 +283,6 @@ export class GraphqlMain {
     const deps = this.context.getDependencies(extension);
     const ids = deps.map((dep) => dep.id);
 
-    // @ts-ignore check :TODO why types are breaking here.
     return Array.from(this.modules.entries())
       .map(([depId, module]) => {
         const dep = ids.includes(depId);
